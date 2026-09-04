@@ -27,7 +27,6 @@
   img{max-width:100%;}
   .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
 
-  /* Nav */
   header{
     position:sticky; top:0; z-index:20;
     background:rgba(255,248,239,0.92);
@@ -44,9 +43,7 @@
     background:var(--brand); color:#fff !important; padding:9px 18px; border-radius:999px;
   }
   .nav-cta:hover{background:var(--brand-dark); color:#fff !important;}
-  .menu-toggle{display:none; background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--ink);}
 
-  /* Hero */
   .hero{
     padding:88px 0 80px;
     text-align:center;
@@ -76,7 +73,6 @@
   .btn-primary:hover{background:var(--brand-dark);}
   .btn-outline{border-color:var(--ink); color:var(--ink); background:transparent;}
   .btn-outline:hover{background:var(--ink); color:var(--cream);}
-  /* Ticker */
   .ticker{
     background:var(--ink); color:var(--cream); padding:12px 0; overflow:hidden; white-space:nowrap;
   }
@@ -84,14 +80,12 @@
   .ticker-track span{margin:0 28px; color:#f4c9b8;}
   @keyframes scroll{ 0%{transform:translateX(0);} 100%{transform:translateX(-100%);} }
 
-  /* Sections */
   section{padding:84px 0;}
   .section-head{max-width:620px; margin:0 auto 52px; text-align:center;}
   .section-head .eyebrow{margin-bottom:16px;}
   .section-head h2{font-size:clamp(1.9rem, 4vw, 2.6rem); font-weight:800; letter-spacing:-0.02em; margin-bottom:14px;}
   .section-head p{color:var(--ink-soft); font-size:1.05rem;}
 
-  /* Story */
   .story{background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
   .story-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
   .story-grid h2{font-size:clamp(1.8rem, 4vw, 2.4rem); font-weight:800; letter-spacing:-0.02em; margin-bottom:18px; line-height:1.1;}
@@ -110,7 +104,6 @@
   .checklist li{display:flex; gap:12px; margin-bottom:12px; font-weight:600; color:var(--ink);}
   .checklist li::before{content:"—"; color:var(--brand); font-weight:800;}
 
-  /* Products */
   .products-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:22px;}
   .product-card{
     background:var(--paper); border:1px solid var(--line); border-radius:22px; padding:30px 24px; text-align:center;
@@ -127,7 +120,6 @@
     display:inline-block; margin-top:14px; font-size:0.72rem; font-weight:700; letter-spacing:0.08em;
     text-transform:uppercase; color:var(--accent); background:#e4f2e9; padding:4px 10px; border-radius:999px;
   }
-  /* Not / Is */
   .compare{background:var(--ink); color:var(--cream);}
   .compare .section-head h2{color:#fff;}
   .compare .section-head p{color:#cbb9a6;}
@@ -142,7 +134,6 @@
   .compare-col.not li::before{content:"✕  "; opacity:0.6;}
   .compare-col.is li::before{content:"✓  ";}
 
-  /* Signup */
   .signup{
     background:linear-gradient(135deg, #fdece2, var(--cream));
     border-top:1px solid var(--line);
@@ -160,10 +151,12 @@
   }
   form.email-form input[type=email]:focus{outline:none; border-color:var(--brand);}
   form.email-form button{border:none;}
+  form.email-form button:disabled{opacity:0.6; cursor:not-allowed;}
   .form-note{font-size:0.82rem; color:var(--ink-soft); margin-top:14px;}
-  .form-success{display:none; font-weight:700; color:var(--accent); margin-top:10px;}
+  .form-message{display:none; font-weight:700; margin-top:10px;}
+  .form-message.success{color:var(--accent);}
+  .form-message.error{color:var(--brand-dark);}
 
-  /* Footer */
   footer{padding:40px 0; border-top:1px solid var(--line); background:var(--paper);}
   .footer-inner{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
   .footer-inner .logo{font-size:1.05rem;}
@@ -298,11 +291,12 @@
       <div class="signup-box">
         <h2>Be first to know</h2>
         <p>We're heads-down building the first lineup. Drop your email and we'll let you know the moment Straight Up Candy launches.</p>
-        <form class="email-form" id="notify-form">
-          <input type="email" name="email" placeholder="you@email.com" required>
-          <button type="submit" class="btn btn-primary">Notify me</button>
+        <form class="email-form" id="notify-form" action="https://app.kit.com/forms/9879978/subscriptions" method="post" data-sv-form="9879978" data-uid="80b9f2f238">
+          <input type="email" name="email_address" placeholder="you@email.com" required aria-label="Email address">
+          <button type="submit" class="btn btn-primary" id="notify-submit">Notify me</button>
         </form>
-        <p class="form-success" id="form-success">You're on the list — thanks!</p>
+        <p class="form-message success" id="form-success">You're on the list — check your inbox to confirm!</p>
+        <p class="form-message error" id="form-error">Something went wrong. Please try again.</p>
         <p class="form-note">No spam, ever. Just one email when we launch.</p>
       </div>
     </div>
@@ -323,10 +317,35 @@
 
   var form = document.getElementById('notify-form');
   var success = document.getElementById('form-success');
+  var errorMsg = document.getElementById('form-error');
+  var submitBtn = document.getElementById('notify-submit');
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    form.style.display = 'none';
-    success.style.display = 'block';
+    errorMsg.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(response){
+      if(response.ok){
+        form.style.display = 'none';
+        success.style.display = 'block';
+      } else {
+        throw new Error('Signup failed');
+      }
+    })
+    .catch(function(){
+      errorMsg.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Notify me';
+    });
   });
 </script>
 

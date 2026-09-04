@@ -412,10 +412,9 @@
             </ul>
           </div>
 
-          <!-- Q2 (behavioral, replaces "how important are ingredients") -->
+          <!-- Q2 (behavioral) -->
           <div class="survey-step" data-step="2">
-            <h3>The last few times you bought candy, did you actually read the ingredient list?</h3>
-            <p class="sub">Be honest — no wrong answer.</p>
+            <h3>How often do you read the ingredient list when you buy candy?</h3>
             <ul class="opt-list">
               <li><label><input type="radio" name="q2" value="Always"> Always</label></li>
               <li><label><input type="radio" name="q2" value="Sometimes"> Sometimes</label></li>
@@ -468,56 +467,36 @@
             </div>
           </div>
 
-          <!-- Q6 Van Westendorp price sensitivity -->
+          <!-- Q6 (simple price slider) -->
           <div class="survey-step" data-step="6">
-            <h3>What does a fair price look like to you?</h3>
-            <p class="sub">Imagine a standard-size package of Straight Up Candy. Give us your gut number for each — no wrong answers.</p>
-            <div class="price-grid">
-              <label class="price-row">
-                <span>At what price would it be <strong>so cheap</strong> you'd doubt the quality?</span>
-                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_toocheap" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
-              </label>
-              <label class="price-row">
-                <span>At what price would it feel like a <strong>great deal</strong>?</span>
-                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_bargain" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
-              </label>
-              <label class="price-row">
-                <span>At what price would it start to feel <strong>expensive but still worth it</strong>?</span>
-                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_expensive" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
-              </label>
-              <label class="price-row">
-                <span>At what price would it be <strong>too expensive</strong> to buy?</span>
-                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_tooexpensive" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
-              </label>
+            <h3>What would you expect to pay for a package of Straight Up Candy?</h3>
+            <p class="sub">Slide to your gut number.</p>
+            <div class="slider-wrap">
+              <div class="slider-value">$<span id="q6-val">4.00</span></div>
+              <input type="range" min="1" max="10" step="0.50" value="4" class="slider" name="q6" id="q6">
+              <div class="slider-scale"><span>$1</span><span>$10</span></div>
             </div>
           </div>
 
-          <!-- Q7 open-ended (Mom Test rewrite) -->
+          <!-- Q7 (categorical - what matters most, randomized) -->
           <div class="survey-step" data-step="7">
-            <h3>Think of the last time you bought candy and felt like you had to compromise on ingredients. What happened?</h3>
-            <p class="sub">One or two sentences is perfect. Skip if it never happens.</p>
-            <textarea class="survey-text" name="q7" placeholder="e.g. bought Sour Patch for my kid's party because there wasn't a clean option that everyone liked…"></textarea>
+            <h3>When picking a candy, what matters most to you?</h3>
+            <p class="sub">Pick the one that wins out over the others.</p>
+            <ul class="opt-list" id="q7-list" data-randomize="true">
+              <li data-shuffle><label><input type="radio" name="q7" value="Taste"> Taste</label></li>
+              <li data-shuffle><label><input type="radio" name="q7" value="Clean ingredients"> Clean ingredients</label></li>
+              <li data-shuffle><label><input type="radio" name="q7" value="Price"> Price</label></li>
+              <li data-shuffle><label><input type="radio" name="q7" value="Brand values / story"> Brand values / story</label></li>
+              <li data-shuffle><label><input type="radio" name="q7" value="Familiar brand"> A brand I already know</label></li>
+              <li data-shuffle><label><input type="radio" name="q7" value="Something new to try"> Trying something new</label></li>
+            </ul>
           </div>
 
-          <!-- Q8 waitlist behavioral commitment + where -->
+          <!-- Q8 waitlist -->
           <div class="survey-step" data-step="8">
             <h3>Want early access + a launch discount?</h3>
             <p class="sub">We're building a small early-buyers list. Optional — leave blank if you'd rather not.</p>
             <input type="email" name="email" class="survey-email" placeholder="you@email.com">
-
-            <div style="margin-top:28px;">
-              <label style="display:block; font-weight:600; margin-bottom:10px; font-size:0.95rem;">
-                Where would you most likely buy Straight Up Candy?
-              </label>
-              <ul class="opt-list" id="q8-where">
-                <li><label><input type="radio" name="q8_where" value="Grocery store"> Grocery store</label></li>
-                <li><label><input type="radio" name="q8_where" value="Health-food store"> Health-food store</label></li>
-                <li><label><input type="radio" name="q8_where" value="Online (our site)"> Online (our site)</label></li>
-                <li><label><input type="radio" name="q8_where" value="Amazon"> Amazon</label></li>
-                <li><label><input type="radio" name="q8_where" value="Local Utah retailer"> Local Utah retailer</label></li>
-                <li><label><input type="radio" name="q8_where" value="Farmers market"> Farmers market</label></li>
-              </ul>
-            </div>
           </div>
 
           <p class="survey-error" id="survey-error"></p>
@@ -666,6 +645,13 @@
     var q5val = document.getElementById('q5-val');
     q5.addEventListener('input', function(){ q5val.textContent = q5.value; });
 
+    // Q6 live price slider value ($X.XX)
+    var q6 = document.getElementById('q6');
+    var q6val = document.getElementById('q6-val');
+    function fmtPrice(v){ return parseFloat(v).toFixed(2); }
+    q6val.textContent = fmtPrice(q6.value);
+    q6.addEventListener('input', function(){ q6val.textContent = fmtPrice(q6.value); });
+
     // Generic "Other reveal" + "None exclusivity" wiring for Q3 and Q4
     function wireExclusive(name, otherToggleId, otherInputId, noneId){
       var otherToggle = document.getElementById(otherToggleId);
@@ -718,36 +704,17 @@
         }
         return true;
       }
-      // Q5 slider — always valid
-      if(qNum === 5){ return true; }
-      // Q6 van Westendorp — validate 4 numeric fields + sanity order
-      if(qNum === 6){
-        var tc = parseFloat(form.q6_toocheap.value);
-        var ba = parseFloat(form.q6_bargain.value);
-        var ex = parseFloat(form.q6_expensive.value);
-        var te = parseFloat(form.q6_tooexpensive.value);
-        if(isNaN(tc) || isNaN(ba) || isNaN(ex) || isNaN(te)){
-          errBox.textContent = 'Please fill in all four prices.'; return false;
-        }
-        if(!(tc <= ba && ba <= ex && ex <= te)){
-          errBox.textContent = 'Prices should go from cheapest to most expensive, top to bottom.'; return false;
-        }
-        return true;
-      }
-      // Q7 open-ended — allow empty
-      if(qNum === 7){ return true; }
-      // Q8 combined: email optional, but 'where' is required
+      // Q5 & Q6 sliders — always valid
+      if(qNum === 5 || qNum === 6){ return true; }
+      // Q8: email is optional; if given, must look valid
       if(qNum === 8){
-        if(!step.querySelector('input[name="q8_where"]:checked')){
-          errBox.textContent = 'Pick where you\'d most likely buy it.'; return false;
-        }
         var em = form.email.value.trim();
         if(em && !/^\S+@\S+\.\S+$/.test(em)){
           errBox.textContent = 'That email looks off — double-check it, or leave it blank.'; return false;
         }
         return true;
       }
-      // Radio questions (Q1, Q2)
+      // Radio questions (Q1, Q2, Q7)
       var picked = step.querySelector('input[type="radio"]:checked');
       if(!picked){ errBox.textContent = 'Please pick an option to continue.'; return false; }
       return true;
@@ -792,13 +759,9 @@
       out['4. Current brands']          = q4brands.join(', ');
       if(fd.get('q4_other'))     out['4b. Other brand']      = fd.get('q4_other');
       out['5. Appeal (1-10)']           = fd.get('q5') || '';
-      out['6a. Price - too cheap']      = fd.get('q6_toocheap') || '';
-      out['6b. Price - bargain']        = fd.get('q6_bargain') || '';
-      out['6c. Price - expensive']      = fd.get('q6_expensive') || '';
-      out['6d. Price - too expensive']  = fd.get('q6_tooexpensive') || '';
-      out['7. Compromise story']        = fd.get('q7') || '';
-      out['8a. Where they\'d buy']      = fd.get('q8_where') || '';
-      if(fd.get('email'))        out['8b. Email (waitlist)'] = fd.get('email');
+      out['6. Expected price ($)']      = fd.get('q6') || '';
+      out['7. Matters most']            = fd.get('q7') || '';
+      if(fd.get('email'))        out['8. Email (waitlist)'] = fd.get('email');
       out['_session_id']                = sessionId;
       out['_time_to_complete_sec']      = startedAt ? Math.round((Date.now() - startedAt) / 1000) : null;
       out['_submitted']                 = new Date().toISOString();

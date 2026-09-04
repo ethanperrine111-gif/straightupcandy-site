@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Straight Up Candy — Clean-Label Candy, No Filler</title>
+<meta name="description" content="Straight Up Candy makes clean, whole-food-based candy — gummies, chocolate, bites, and hard candy with nothing to hide.">
+<style>
+  :root{
+    --cream:#fff8ef;
+    --paper:#fffdf9;
+    --ink:#241a12;
+    --ink-soft:#5c4b3a;
+    --brand:#e8461f;
+    --brand-dark:#c23616;
+    --accent:#2f7a4f;
+    --line:#ecd9c2;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  img{max-width:100%;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
+
+  /* Nav */
+  header{
+    position:sticky; top:0; z-index:20;
+    background:rgba(255,248,239,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{display:flex; align-items:center; justify-content:space-between; padding:18px 24px; max-width:1080px; margin:0 auto;}
+  .logo{font-weight:800; font-size:1.25rem; letter-spacing:-0.02em; text-decoration:none; color:var(--ink);}
+  .logo span{color:var(--brand);}
+  nav ul{list-style:none; display:flex; gap:28px;}
+  nav a{color:var(--ink-soft); text-decoration:none; font-size:0.95rem; font-weight:600;}
+  nav a:hover{color:var(--brand);}
+  .nav-cta{
+    background:var(--brand); color:#fff !important; padding:9px 18px; border-radius:999px;
+  }
+  .nav-cta:hover{background:var(--brand-dark); color:#fff !important;}
+  .menu-toggle{display:none; background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--ink);}
+
+  /* Hero */
+  .hero{
+    padding:88px 0 80px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .eyebrow{
+    display:inline-block; font-size:0.8rem; font-weight:700; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--accent); background:#e4f2e9; padding:6px 14px;
+    border-radius:999px; margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 4.2rem);
+    font-weight:800; letter-spacing:-0.03em; line-height:1.02;
+    margin-bottom:20px;
+  }
+  .hero h1 em{color:var(--brand); font-style:normal;}
+  .hero p.lede{
+    max-width:560px; margin:0 auto 34px; font-size:1.15rem; color:var(--ink-soft);
+  }
+  .hero-ctas{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .btn{
+    display:inline-block; padding:14px 28px; border-radius:999px; font-weight:700;
+    text-decoration:none; font-size:1rem; border:2px solid transparent; cursor:pointer;
+  }
+  .btn-primary{background:var(--brand); color:#fff;}
+  .btn-primary:hover{background:var(--brand-dark);}
+  .btn-outline{border-color:var(--ink); color:var(--ink); background:transparent;}
+  .btn-outline:hover{background:var(--ink); color:var(--cream);}
+  /* Ticker */
+  .ticker{
+    background:var(--ink); color:var(--cream); padding:12px 0; overflow:hidden; white-space:nowrap;
+  }
+  .ticker-track{display:inline-block; padding-left:100%; animation:scroll 26s linear infinite; font-weight:700; letter-spacing:0.04em; font-size:0.85rem; text-transform:uppercase;}
+  .ticker-track span{margin:0 28px; color:#f4c9b8;}
+  @keyframes scroll{ 0%{transform:translateX(0);} 100%{transform:translateX(-100%);} }
+
+  /* Sections */
+  section{padding:84px 0;}
+  .section-head{max-width:620px; margin:0 auto 52px; text-align:center;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-size:clamp(1.9rem, 4vw, 2.6rem); font-weight:800; letter-spacing:-0.02em; margin-bottom:14px;}
+  .section-head p{color:var(--ink-soft); font-size:1.05rem;}
+
+  /* Story */
+  .story{background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .story-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
+  .story-grid h2{font-size:clamp(1.8rem, 4vw, 2.4rem); font-weight:800; letter-spacing:-0.02em; margin-bottom:18px; line-height:1.1;}
+  .story-grid p{color:var(--ink-soft); margin-bottom:16px; font-size:1.03rem;}
+  .story-visual{
+    aspect-ratio:1/1; border-radius:28px; background:linear-gradient(135deg, #ffd9a0, var(--brand) 60%, #a83214);
+    display:flex; align-items:center; justify-content:center; padding:32px;
+  }
+  .story-visual .badge{
+    background:rgba(255,255,255,0.95); color:var(--ink); font-weight:800; font-size:1.4rem;
+    padding:24px; border-radius:18px; text-align:center; line-height:1.25; box-shadow:0 20px 40px rgba(0,0,0,0.15);
+  }
+  .story-visual .badge small{display:block; font-weight:600; font-size:0.8rem; color:var(--ink-soft); margin-top:6px; text-transform:uppercase; letter-spacing:0.08em;}
+
+  .checklist{list-style:none; margin-top:24px;}
+  .checklist li{display:flex; gap:12px; margin-bottom:12px; font-weight:600; color:var(--ink);}
+  .checklist li::before{content:"—"; color:var(--brand); font-weight:800;}
+
+  /* Products */
+  .products-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:22px;}
+  .product-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:22px; padding:30px 24px; text-align:center;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .product-card:hover{transform:translateY(-4px); box-shadow:0 16px 32px rgba(36,26,18,0.08);}
+  .product-icon{
+    width:64px; height:64px; border-radius:50%; margin:0 auto 18px; display:flex; align-items:center; justify-content:center;
+    font-size:1.8rem; background:#fdece2;
+  }
+  .product-card h3{font-size:1.1rem; font-weight:800; margin-bottom:8px;}
+  .product-card p{color:var(--ink-soft); font-size:0.92rem;}
+  .soon-tag{
+    display:inline-block; margin-top:14px; font-size:0.72rem; font-weight:700; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--accent); background:#e4f2e9; padding:4px 10px; border-radius:999px;
+  }
+  /* Not / Is */
+  .compare{background:var(--ink); color:var(--cream);}
+  .compare .section-head h2{color:#fff;}
+  .compare .section-head p{color:#cbb9a6;}
+  .compare-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .compare-col{border-radius:22px; padding:34px;}
+  .compare-col.not{background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);}
+  .compare-col.is{background:var(--brand);}
+  .compare-col h3{font-size:1.3rem; font-weight:800; margin-bottom:18px;}
+  .compare-col ul{list-style:none;}
+  .compare-col li{padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.12); font-weight:600;}
+  .compare-col li:last-child{border-bottom:none;}
+  .compare-col.not li::before{content:"✕  "; opacity:0.6;}
+  .compare-col.is li::before{content:"✓  ";}
+
+  /* Signup */
+  .signup{
+    background:linear-gradient(135deg, #fdece2, var(--cream));
+    border-top:1px solid var(--line);
+  }
+  .signup-box{
+    max-width:560px; margin:0 auto; text-align:center; background:var(--paper);
+    border:1px solid var(--line); border-radius:28px; padding:52px 40px; box-shadow:0 24px 48px rgba(36,26,18,0.06);
+  }
+  .signup-box h2{font-size:1.9rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:12px;}
+  .signup-box p{color:var(--ink-soft); margin-bottom:28px;}
+  form.email-form{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+  form.email-form input[type=email]{
+    flex:1 1 260px; padding:14px 18px; border-radius:999px; border:2px solid var(--line);
+    font-size:1rem; background:var(--cream); color:var(--ink);
+  }
+  form.email-form input[type=email]:focus{outline:none; border-color:var(--brand);}
+  form.email-form button{border:none;}
+  .form-note{font-size:0.82rem; color:var(--ink-soft); margin-top:14px;}
+  .form-success{display:none; font-weight:700; color:var(--accent); margin-top:10px;}
+
+  /* Footer */
+  footer{padding:40px 0; border-top:1px solid var(--line); background:var(--paper);}
+  .footer-inner{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  .footer-inner .logo{font-size:1.05rem;}
+  footer p{color:var(--ink-soft); font-size:0.85rem;}
+  footer a{color:var(--ink-soft);}
+
+  @media (max-width: 860px){
+    .story-grid, .products-grid, .compare-grid{grid-template-columns:1fr;}
+    nav ul{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a href="#top" class="logo">Straight<span>Up</span> Candy</a>
+    <ul>
+      <li><a href="#story">Story</a></li>
+      <li><a href="#products">What We Make</a></li>
+      <li><a href="#signup" class="nav-cta">Get Notified</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Coming soon</span>
+      <h1>Candy, <em>straight up</em>.<br>No mixer, no filler.</h1>
+      <p class="lede">Clean, whole-food-based candy for people who read the label. Real fruit, real sugar, nothing you can't pronounce — in every format, not just one.</p>
+      <div class="hero-ctas">
+        <a href="#signup" class="btn btn-primary">Get notified at launch</a>
+        <a href="#story" class="btn btn-outline">Our story</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>NO CORN SYRUP</span><span>NO ARTIFICIAL DYES</span><span>NO MYSTERY GUMS</span><span>WHOLE-FOOD INGREDIENTS</span>
+      <span>NO CORN SYRUP</span><span>NO ARTIFICIAL DYES</span><span>NO MYSTERY GUMS</span><span>WHOLE-FOOD INGREDIENTS</span>
+    </div>
+  </div>
+
+  <section class="story" id="story">
+    <div class="wrap story-grid">
+      <div>
+        <span class="eyebrow" style="margin-bottom:16px;">Why we started</span>
+        <h2>Candy shouldn't need a decoder ring.</h2>
+        <p>Most candy is built from a handful of industrial inputs dressed up with color and flavor. We flipped that: start with real, whole-food ingredients, and build the candy around them instead of the other way around.</p>
+        <p>No corn syrup, no artificial dyes, no ingredients you need a chemistry degree to understand. Just candy, made straight up.</p>
+        <ul class="checklist">
+          <li>Whole-food, recognizable ingredients</li>
+          <li>No artificial colors or flavors</li>
+          <li>Made for adults who still love candy</li>
+        </ul>
+      </div>
+      <div class="story-visual">
+        <div class="badge">Undiluted.<br>Unadulterated.<br>Uncompromised.<small>The Straight Up standard</small></div>
+      </div>
+    </div>
+  </section>
+  <section id="products">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What we make</span>
+        <h2>One standard, every format.</h2>
+        <p>Clean-label candy shouldn't mean picking one lane. We're building the full lineup.</p>
+      </div>
+      <div class="products-grid">
+        <div class="product-card">
+          <div class="product-icon">🍬</div>
+          <h3>Gummies</h3>
+          <p>Our anchor category — real fruit, real texture, no mystery gums.</p>
+          <span class="soon-tag">In development</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">🍫</div>
+          <h3>Chocolate</h3>
+          <p>Clean-label bars and bites, built the same honest way.</p>
+          <span class="soon-tag">Coming later</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">🍡</div>
+          <h3>Bites</h3>
+          <p>Small-format, whole-food snacking candy for on the go.</p>
+          <span class="soon-tag">Coming later</span>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">🍭</div>
+          <h3>Hard Candy</h3>
+          <p>The classic format, rebuilt without the artificial stuff.</p>
+          <span class="soon-tag">Coming later</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="compare">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" style="background:rgba(255,255,255,0.08); color:#f4c9b8;">The difference</span>
+        <h2>What "straight up" actually means</h2>
+        <p>We're not vague about it. Here's exactly what's different.</p>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-col not">
+          <h3>Typical candy</h3>
+          <ul>
+            <li>Corn syrup as the base</li>
+            <li>Artificial colors & dyes</li>
+            <li>Long, unrecognizable ingredient lists</li>
+            <li>Flavor built in a lab</li>
+          </ul>
+        </div>
+        <div class="compare-col is">
+          <h3>Straight Up Candy</h3>
+          <ul>
+            <li>Whole-food ingredients, real sugar</li>
+            <li>Color from real fruit & plants</li>
+            <li>Short, plain-English labels</li>
+            <li>Flavor from the ingredients themselves</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="signup" id="signup">
+    <div class="wrap">
+      <div class="signup-box">
+        <h2>Be first to know</h2>
+        <p>We're heads-down building the first lineup. Drop your email and we'll let you know the moment Straight Up Candy launches.</p>
+        <form class="email-form" id="notify-form">
+          <input type="email" name="email" placeholder="you@email.com" required>
+          <button type="submit" class="btn btn-primary">Notify me</button>
+        </form>
+        <p class="form-success" id="form-success">You're on the list — thanks!</p>
+        <p class="form-note">No spam, ever. Just one email when we launch.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <a href="#top" class="logo">Straight<span style="color:var(--brand)">Up</span> Candy</a>
+    <p>&copy; <span id="year"></span> Straight Up Candy. Clean-label candy, made straight up.</p>
+    <p><a href="mailto:hello@straightupcandy.com">hello@straightupcandy.com</a></p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  var form = document.getElementById('notify-form');
+  var success = document.getElementById('form-success');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    form.style.display = 'none';
+    success.style.display = 'block';
+  });
+</script>
+
+</body>
+</html>

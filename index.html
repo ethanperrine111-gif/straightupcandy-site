@@ -258,6 +258,34 @@
   .btn-ghost:disabled{opacity:0.35; cursor:not-allowed;}
   .survey-error{color:var(--brand-dark); font-weight:600; font-size:0.9rem; margin-top:12px; min-height:1.2em;}
 
+  .price-grid{display:flex; flex-direction:column; gap:14px;}
+  .price-row{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:14px 18px; border:2px solid var(--line); border-radius:16px;
+    background:var(--paper); font-weight:600; color:var(--ink); font-size:0.94rem;
+  }
+  .price-row strong{color:var(--brand);}
+  .price-row > span:first-child{flex:1; line-height:1.35;}
+  .dollar{
+    display:inline-flex; align-items:center; background:var(--cream);
+    border:2px solid var(--line); border-radius:12px; padding:0 12px 0 14px;
+    flex-shrink:0;
+  }
+  .dollar:focus-within{border-color:var(--brand);}
+  .dollar-sign{color:var(--ink-soft); font-weight:700; margin-right:2px;}
+  .dollar input{
+    border:none; background:transparent; padding:10px 4px; width:80px;
+    font:inherit; color:var(--ink); text-align:right;
+  }
+  .dollar input:focus{outline:none;}
+  .dollar input::-webkit-outer-spin-button,
+  .dollar input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .dollar input[type=number]{-moz-appearance:textfield;}
+  @media (max-width:520px){
+    .price-row{flex-direction:column; align-items:flex-start;}
+    .dollar{align-self:flex-end;}
+  }
+
   .survey-done{text-align:center; padding:20px 0;}
   .survey-done .checkmark{
     width:72px; height:72px; margin:0 auto 20px; border-radius:50%;
@@ -362,10 +390,10 @@
 
       <div class="survey-card" id="survey-card">
         <div class="survey-progress"><div class="survey-progress-bar" id="survey-bar"></div></div>
-        <div class="survey-step-count" id="survey-count">Question 1 of 7</div>
+        <div class="survey-step-count" id="survey-count">Question 1 of 8</div>
 
         <form id="survey-form" novalidate>
-          <!-- Q1 -->
+          <!-- Q1 (screener) -->
           <div class="survey-step active" data-step="1">
             <h3>How often do you eat candy?</h3>
             <ul class="opt-list">
@@ -377,75 +405,111 @@
             </ul>
           </div>
 
-          <!-- Q2 -->
+          <!-- Q2 (behavioral, replaces "how important are ingredients") -->
           <div class="survey-step" data-step="2">
-            <h3>How important are the ingredients in the candy you buy?</h3>
+            <h3>The last few times you bought candy, did you actually read the ingredient list?</h3>
+            <p class="sub">Be honest — no wrong answer.</p>
             <ul class="opt-list">
-              <li><label><input type="radio" name="q2" value="Very important"> Very important</label></li>
-              <li><label><input type="radio" name="q2" value="Somewhat important"> Somewhat important</label></li>
-              <li><label><input type="radio" name="q2" value="Not very important"> Not very important</label></li>
-              <li><label><input type="radio" name="q2" value="Not important"> Not important at all</label></li>
+              <li><label><input type="radio" name="q2" value="Always"> Always</label></li>
+              <li><label><input type="radio" name="q2" value="Sometimes"> Sometimes</label></li>
+              <li><label><input type="radio" name="q2" value="Rarely"> Rarely</label></li>
+              <li><label><input type="radio" name="q2" value="Never"> Never</label></li>
             </ul>
           </div>
 
-          <!-- Q3 -->
+          <!-- Q3 (multi-select, randomized in JS) -->
           <div class="survey-step" data-step="3">
             <h3>What ingredients do you try to avoid in candy?</h3>
             <p class="sub">Select all that apply.</p>
-            <ul class="opt-list">
-              <li><label><input type="checkbox" name="q3" value="Artificial colors"> Artificial colors</label></li>
-              <li><label><input type="checkbox" name="q3" value="Artificial flavors"> Artificial flavors</label></li>
-              <li><label><input type="checkbox" name="q3" value="Processed sugar / corn syrup"> Processed sugar / corn syrup</label></li>
-              <li><label><input type="checkbox" name="q3" value="Preservatives / additives"> Preservatives / additives</label></li>
+            <ul class="opt-list" id="q3-list" data-randomize="true">
+              <li data-shuffle><label><input type="checkbox" name="q3" value="Artificial colors"> Artificial colors</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q3" value="Artificial flavors"> Artificial flavors</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q3" value="High-fructose corn syrup"> High-fructose corn syrup</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q3" value="Seed oils"> Seed oils</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q3" value="Preservatives / additives"> Preservatives / additives</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q3" value="Gelatin"> Gelatin</label></li>
               <li><label><input type="checkbox" name="q3" value="Other" id="q3-other-toggle"> Other</label></li>
               <li><label><input type="checkbox" name="q3" value="None" id="q3-none"> None — I don't avoid anything</label></li>
             </ul>
             <input type="text" class="opt-other" id="q3-other" name="q3_other" placeholder="What else?" hidden>
           </div>
 
-          <!-- Q4 -->
+          <!-- Q4 NEW (competitor / current brands) -->
           <div class="survey-step" data-step="4">
+            <h3>When you buy "better-for-you" candy today, which brands do you reach for?</h3>
+            <p class="sub">Select all that apply — this helps us know where we fit.</p>
+            <ul class="opt-list" id="q4-list" data-randomize="true">
+              <li data-shuffle><label><input type="checkbox" name="q4_brands" value="Smart Sweets"> Smart Sweets</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q4_brands" value="YumEarth"> YumEarth</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q4_brands" value="Unreal"> Unreal</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q4_brands" value="Lily's"> Lily's</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q4_brands" value="Torie & Howard"> Torie &amp; Howard</label></li>
+              <li data-shuffle><label><input type="checkbox" name="q4_brands" value="Trader Joe's own brand"> Trader Joe's own brand</label></li>
+              <li><label><input type="checkbox" name="q4_brands" value="Other" id="q4-other-toggle"> Other</label></li>
+              <li><label><input type="checkbox" name="q4_brands" value="I don't buy any" id="q4-none"> I don't buy any</label></li>
+            </ul>
+            <input type="text" class="opt-other" id="q4-other" name="q4_other" placeholder="Which brand(s)?" hidden>
+          </div>
+
+          <!-- Q5 (appeal slider — kept) -->
+          <div class="survey-step" data-step="5">
             <h3>How appealing is Straight Up Candy to you so far?</h3>
             <div class="slider-wrap">
-              <div class="slider-value"><span id="q4-val">5</span><small>/10</small></div>
-              <input type="range" min="1" max="10" step="1" value="5" class="slider" name="q4" id="q4">
+              <div class="slider-value"><span id="q5-val">5</span><small>/10</small></div>
+              <input type="range" min="1" max="10" step="1" value="5" class="slider" name="q5" id="q5">
               <div class="slider-scale"><span>Not at all</span><span>Very</span></div>
             </div>
           </div>
 
-          <!-- Q5 -->
-          <div class="survey-step" data-step="5">
-            <h3>After seeing the product and ingredients, how likely would you be to buy it?</h3>
-            <ul class="opt-list">
-              <li><label><input type="radio" name="q5" value="Very likely"> Very likely</label></li>
-              <li><label><input type="radio" name="q5" value="Likely"> Likely</label></li>
-              <li><label><input type="radio" name="q5" value="Maybe"> Maybe</label></li>
-              <li><label><input type="radio" name="q5" value="Unlikely"> Unlikely</label></li>
-            </ul>
-          </div>
-
-          <!-- Q6 -->
+          <!-- Q6 Van Westendorp price sensitivity -->
           <div class="survey-step" data-step="6">
-            <h3>What would you expect to pay for a package of Straight Up Candy?</h3>
-            <ul class="opt-list">
-              <li><label><input type="radio" name="q6" value="$2–3"> $2–3</label></li>
-              <li><label><input type="radio" name="q6" value="$3–4"> $3–4</label></li>
-              <li><label><input type="radio" name="q6" value="$4–5"> $4–5</label></li>
-              <li><label><input type="radio" name="q6" value="$5+"> $5+</label></li>
-              <li><label><input type="radio" name="q6" value="Wouldn't pay for it"> I wouldn't pay for it</label></li>
-            </ul>
+            <h3>What does a fair price look like to you?</h3>
+            <p class="sub">Imagine a standard-size package of Straight Up Candy. Give us your gut number for each — no wrong answers.</p>
+            <div class="price-grid">
+              <label class="price-row">
+                <span>At what price would it be <strong>so cheap</strong> you'd doubt the quality?</span>
+                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_toocheap" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
+              </label>
+              <label class="price-row">
+                <span>At what price would it feel like a <strong>great deal</strong>?</span>
+                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_bargain" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
+              </label>
+              <label class="price-row">
+                <span>At what price would it start to feel <strong>expensive but still worth it</strong>?</span>
+                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_expensive" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
+              </label>
+              <label class="price-row">
+                <span>At what price would it be <strong>too expensive</strong> to buy?</span>
+                <span class="dollar"><span class="dollar-sign">$</span><input type="number" name="q6_tooexpensive" min="0" step="0.50" inputmode="decimal" placeholder="0.00"></span>
+              </label>
+            </div>
           </div>
 
-          <!-- Q7 -->
+          <!-- Q7 open-ended (Mom Test rewrite) -->
           <div class="survey-step" data-step="7">
-            <h3>What would make you choose Straight Up Candy over regular candy?</h3>
-            <p class="sub">Be honest — one sentence is fine.</p>
-            <textarea class="survey-text" name="q7" placeholder="e.g. cleaner ingredients I can actually pronounce…"></textarea>
-            <div style="margin-top:22px;">
-              <label style="display:block; font-weight:600; margin-bottom:8px; font-size:0.95rem;">
-                Email (optional — if you want early-access samples)
+            <h3>Think of the last time you bought candy and felt like you had to compromise on ingredients. What happened?</h3>
+            <p class="sub">One or two sentences is perfect. Skip if it never happens.</p>
+            <textarea class="survey-text" name="q7" placeholder="e.g. bought Sour Patch for my kid's party because there wasn't a clean option that everyone liked…"></textarea>
+          </div>
+
+          <!-- Q8 waitlist behavioral commitment + where -->
+          <div class="survey-step" data-step="8">
+            <h3>Want early access + a launch discount?</h3>
+            <p class="sub">We're building a small early-buyers list. Optional — leave blank if you'd rather not.</p>
+            <input type="email" name="email" class="survey-email" placeholder="you@email.com">
+
+            <div style="margin-top:28px;">
+              <label style="display:block; font-weight:600; margin-bottom:10px; font-size:0.95rem;">
+                Where would you most likely buy Straight Up Candy?
               </label>
-              <input type="email" name="email" class="survey-email" placeholder="you@email.com">
+              <ul class="opt-list" id="q8-where">
+                <li><label><input type="radio" name="q8_where" value="Grocery store"> Grocery store</label></li>
+                <li><label><input type="radio" name="q8_where" value="Health-food store"> Health-food store</label></li>
+                <li><label><input type="radio" name="q8_where" value="Online (our site)"> Online (our site)</label></li>
+                <li><label><input type="radio" name="q8_where" value="Amazon"> Amazon</label></li>
+                <li><label><input type="radio" name="q8_where" value="Local Utah retailer"> Local Utah retailer</label></li>
+                <li><label><input type="radio" name="q8_where" value="Farmers market"> Farmers market</label></li>
+              </ul>
             </div>
           </div>
 
@@ -457,10 +521,19 @@
           </div>
         </form>
 
+        <!-- Screener exit screen for "Never eats candy" -->
+        <div class="survey-done" id="survey-screened" hidden>
+          <div class="checkmark" style="background:var(--ink-soft);">·</div>
+          <h3>Thanks for stopping by!</h3>
+          <p>Sounds like candy isn't really your thing — no worries. If you know someone who loves candy but cares about ingredients, we'd love it if you sent them this way.</p>
+          <a href="#top" class="btn btn-outline">Back to the top</a>
+        </div>
+
         <div class="survey-done" id="survey-done" hidden>
           <div class="checkmark">✓</div>
           <h3>Thank you!</h3>
           <p>Your input goes straight into shaping the first Straight Up Candy lineup. We'll be in touch when we launch.</p>
+          <p style="margin-top:8px;"><strong>Know someone else who'd have opinions?</strong> Send them <a href="#survey" style="color:var(--brand); font-weight:700;">this link</a> — it genuinely helps.</p>
           <a href="#signup" class="btn btn-outline">Also join the launch list</a>
         </div>
       </div>
@@ -552,34 +625,66 @@
     var next   = document.getElementById('survey-next');
     var errBox = document.getElementById('survey-error');
     var done   = document.getElementById('survey-done');
+    var screened = document.getElementById('survey-screened');
     var total  = steps.length;
     var cur    = 0;
+    var startedAt = null;
 
-    // Q4 live slider value
-    var q4 = document.getElementById('q4');
-    var q4val = document.getElementById('q4-val');
-    q4.addEventListener('input', function(){ q4val.textContent = q4.value; });
-
-    // Q3 "Other" toggle + "None" exclusivity
-    var otherToggle = document.getElementById('q3-other-toggle');
-    var otherInput  = document.getElementById('q3-other');
-    var noneBox     = document.getElementById('q3-none');
-    otherToggle.addEventListener('change', function(){
-      otherInput.hidden = !otherToggle.checked;
-      if(otherToggle.checked) otherInput.focus();
-    });
-    form.querySelectorAll('input[name="q3"]').forEach(function(cb){
-      cb.addEventListener('change', function(){
-        if(cb === noneBox && cb.checked){
-          form.querySelectorAll('input[name="q3"]').forEach(function(o){
-            if(o !== noneBox) o.checked = false;
-          });
-          otherInput.hidden = true;
-        } else if(cb.checked && noneBox.checked){
-          noneBox.checked = false;
+    // Session id (prevents dupes on refresh, gives you an idempotency key in Basin)
+    var sessionId = (function(){
+      try {
+        var k = 'suc_survey_sid';
+        var s = sessionStorage.getItem(k);
+        if(!s){
+          s = (window.crypto && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : (Date.now().toString(36) + Math.random().toString(36).slice(2,10));
+          sessionStorage.setItem(k, s);
         }
-      });
+        return s;
+      } catch(_){ return Date.now().toString(36); }
+    })();
+
+    // Randomize option order within lists tagged data-randomize (Fisher-Yates on data-shuffle rows)
+    form.querySelectorAll('[data-randomize="true"]').forEach(function(list){
+      var pool = Array.prototype.slice.call(list.querySelectorAll('[data-shuffle]'));
+      for(var i = pool.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        list.insertBefore(pool[i], pool[j]);
+      }
     });
+
+    // Q5 live slider value
+    var q5 = document.getElementById('q5');
+    var q5val = document.getElementById('q5-val');
+    q5.addEventListener('input', function(){ q5val.textContent = q5.value; });
+
+    // Generic "Other reveal" + "None exclusivity" wiring for Q3 and Q4
+    function wireExclusive(name, otherToggleId, otherInputId, noneId){
+      var otherToggle = document.getElementById(otherToggleId);
+      var otherInput  = document.getElementById(otherInputId);
+      var noneBox     = document.getElementById(noneId);
+      if(otherToggle){
+        otherToggle.addEventListener('change', function(){
+          otherInput.hidden = !otherToggle.checked;
+          if(otherToggle.checked) otherInput.focus();
+        });
+      }
+      form.querySelectorAll('input[name="' + name + '"]').forEach(function(cb){
+        cb.addEventListener('change', function(){
+          if(cb === noneBox && cb.checked){
+            form.querySelectorAll('input[name="' + name + '"]').forEach(function(o){
+              if(o !== noneBox) o.checked = false;
+            });
+            if(otherInput) otherInput.hidden = true;
+          } else if(cb.checked && noneBox && noneBox.checked){
+            noneBox.checked = false;
+          }
+        });
+      });
+    }
+    wireExclusive('q3',        'q3-other-toggle', 'q3-other', 'q3-none');
+    wireExclusive('q4_brands', 'q4-other-toggle', 'q4-other', 'q4-none');
 
     function render(){
       steps.forEach(function(s,i){ s.classList.toggle('active', i === cur); });
@@ -593,24 +698,69 @@
     function validateStep(){
       var step = steps[cur];
       var qNum = cur + 1;
-      // Q3 checkbox group
+      // Q3 & Q4 checkbox groups
       if(qNum === 3){
-        var any = step.querySelectorAll('input[name="q3"]:checked').length;
-        if(!any){ errBox.textContent = 'Pick at least one option (or choose "None").'; return false; }
+        if(!step.querySelectorAll('input[name="q3"]:checked').length){
+          errBox.textContent = 'Pick at least one option (or choose "None").'; return false;
+        }
         return true;
       }
-      // Q7 open-ended — allow empty (skip)
+      if(qNum === 4){
+        if(!step.querySelectorAll('input[name="q4_brands"]:checked').length){
+          errBox.textContent = 'Pick at least one (or choose "I don\'t buy any").'; return false;
+        }
+        return true;
+      }
+      // Q5 slider — always valid
+      if(qNum === 5){ return true; }
+      // Q6 van Westendorp — validate 4 numeric fields + sanity order
+      if(qNum === 6){
+        var tc = parseFloat(form.q6_toocheap.value);
+        var ba = parseFloat(form.q6_bargain.value);
+        var ex = parseFloat(form.q6_expensive.value);
+        var te = parseFloat(form.q6_tooexpensive.value);
+        if(isNaN(tc) || isNaN(ba) || isNaN(ex) || isNaN(te)){
+          errBox.textContent = 'Please fill in all four prices.'; return false;
+        }
+        if(!(tc <= ba && ba <= ex && ex <= te)){
+          errBox.textContent = 'Prices should go from cheapest to most expensive, top to bottom.'; return false;
+        }
+        return true;
+      }
+      // Q7 open-ended — allow empty
       if(qNum === 7){ return true; }
-      // Q4 slider always has a value
-      if(qNum === 4){ return true; }
-      // Radio questions
+      // Q8 combined: email optional, but 'where' is required
+      if(qNum === 8){
+        if(!step.querySelector('input[name="q8_where"]:checked')){
+          errBox.textContent = 'Pick where you\'d most likely buy it.'; return false;
+        }
+        var em = form.email.value.trim();
+        if(em && !/^\S+@\S+\.\S+$/.test(em)){
+          errBox.textContent = 'That email looks off — double-check it, or leave it blank.'; return false;
+        }
+        return true;
+      }
+      // Radio questions (Q1, Q2)
       var picked = step.querySelector('input[type="radio"]:checked');
       if(!picked){ errBox.textContent = 'Please pick an option to continue.'; return false; }
       return true;
     }
 
+    // Screener: "Never" on Q1 → skip straight to a polite exit screen
+    function checkScreener(){
+      var q1 = form.querySelector('input[name="q1"]:checked');
+      return q1 && q1.value === 'Never';
+    }
+
     next.addEventListener('click', function(){
       if(!validateStep()) return;
+      if(cur === 0 && checkScreener()){
+        form.hidden = true;
+        document.querySelector('.survey-progress').hidden = true;
+        count.hidden = true;
+        screened.hidden = false;
+        return;
+      }
       if(cur < total - 1){ cur++; render(); return; }
       submit();
     });
@@ -618,21 +768,33 @@
       if(cur > 0){ cur--; render(); }
     });
 
+    // Start the timer on first interaction
+    form.addEventListener('input', function(){
+      if(!startedAt) startedAt = Date.now();
+    }, { once:true });
+
     function collect(){
       var fd = new FormData(form);
       var out = {};
-      // Merge Q3 checkboxes into a single list
       var q3vals = fd.getAll('q3');
-      if(q3vals.length) out['3. Ingredients avoided'] = q3vals.join(', ');
-      if(fd.get('q3_other')) out['3b. Other'] = fd.get('q3_other');
-      out['1. Candy frequency']      = fd.get('q1') || '';
-      out['2. Ingredient importance'] = fd.get('q2') || '';
-      out['4. Appeal (1-10)']         = fd.get('q4') || '';
-      out['5. Purchase likelihood']   = fd.get('q5') || '';
-      out['6. Expected price']        = fd.get('q6') || '';
-      out['7. Why choose us']         = fd.get('q7') || '';
-      if(fd.get('email')) out['Email'] = fd.get('email');
-      out['_submitted'] = new Date().toISOString();
+      var q4brands = fd.getAll('q4_brands');
+      out['1. Candy frequency']         = fd.get('q1') || '';
+      out['2. Reads ingredient list']   = fd.get('q2') || '';
+      out['3. Ingredients avoided']     = q3vals.join(', ');
+      if(fd.get('q3_other'))     out['3b. Other ingredient'] = fd.get('q3_other');
+      out['4. Current brands']          = q4brands.join(', ');
+      if(fd.get('q4_other'))     out['4b. Other brand']      = fd.get('q4_other');
+      out['5. Appeal (1-10)']           = fd.get('q5') || '';
+      out['6a. Price - too cheap']      = fd.get('q6_toocheap') || '';
+      out['6b. Price - bargain']        = fd.get('q6_bargain') || '';
+      out['6c. Price - expensive']      = fd.get('q6_expensive') || '';
+      out['6d. Price - too expensive']  = fd.get('q6_tooexpensive') || '';
+      out['7. Compromise story']        = fd.get('q7') || '';
+      out['8a. Where they\'d buy']      = fd.get('q8_where') || '';
+      if(fd.get('email'))        out['8b. Email (waitlist)'] = fd.get('email');
+      out['_session_id']                = sessionId;
+      out['_time_to_complete_sec']      = startedAt ? Math.round((Date.now() - startedAt) / 1000) : null;
+      out['_submitted']                 = new Date().toISOString();
       return out;
     }
 
@@ -664,7 +826,6 @@
           next.textContent = 'Submit';
         });
       } else {
-        // Fallback: open email client with pre-filled body
         var body = Object.keys(data).map(function(k){ return k + ': ' + data[k]; }).join('\n');
         var mailto = 'mailto:' + SURVEY_FALLBACK_EMAIL
                    + '?subject=' + encodeURIComponent('Straight Up Candy survey response')

@@ -163,9 +163,114 @@
   footer p{color:var(--ink-soft); font-size:0.85rem;}
   footer a{color:var(--ink-soft);}
 
+  /* ---------- Survey ---------- */
+  .survey{background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .survey-card{
+    max-width:640px; margin:0 auto; background:var(--cream);
+    border:1px solid var(--line); border-radius:28px; padding:44px 40px;
+    box-shadow:0 24px 48px rgba(36,26,18,0.06);
+  }
+  .survey-progress{
+    height:6px; background:var(--line); border-radius:999px; overflow:hidden; margin-bottom:8px;
+  }
+  .survey-progress-bar{
+    height:100%; width:0%; background:var(--brand);
+    border-radius:999px; transition:width 0.3s ease;
+  }
+  .survey-step-count{font-size:0.8rem; color:var(--ink-soft); font-weight:600; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:22px;}
+  .survey-step{display:none;}
+  .survey-step.active{display:block; animation:fadeIn 0.25s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .survey-step h3{
+    font-size:1.35rem; font-weight:800; letter-spacing:-0.01em;
+    line-height:1.25; margin-bottom:22px;
+  }
+  .survey-step .sub{color:var(--ink-soft); font-size:0.92rem; margin:-14px 0 22px;}
+
+  .opt-list{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .opt-list label{
+    display:flex; align-items:center; gap:12px; cursor:pointer;
+    padding:14px 18px; border:2px solid var(--line); border-radius:16px;
+    background:var(--paper); font-weight:600; color:var(--ink);
+    transition:border-color 0.15s, background 0.15s;
+  }
+  .opt-list label:hover{border-color:var(--brand);}
+  .opt-list input{accent-color:var(--brand); width:18px; height:18px; flex-shrink:0;}
+  .opt-list label:has(input:checked){border-color:var(--brand); background:#fdece2;}
+  .opt-other{
+    margin-top:4px; padding:12px 16px; border-radius:14px;
+    border:2px solid var(--line); background:var(--paper); font:inherit;
+    color:var(--ink); width:100%;
+  }
+  .opt-other:focus{outline:none; border-color:var(--brand);}
+  .opt-other[hidden]{display:none;}
+
+  .slider-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+    padding:24px 0 8px;
+  }
+  .slider-value{
+    font-size:3.4rem; font-weight:800; color:var(--brand); line-height:1;
+    letter-spacing:-0.03em;
+  }
+  .slider-value small{color:var(--ink-soft); font-size:1rem; font-weight:600;}
+  .slider-scale{
+    display:flex; justify-content:space-between; width:100%; max-width:400px;
+    font-size:0.78rem; color:var(--ink-soft); font-weight:600;
+  }
+  input[type=range].slider{
+    -webkit-appearance:none; appearance:none; width:100%; max-width:400px; height:6px;
+    background:var(--line); border-radius:999px; outline:none;
+  }
+  input[type=range].slider::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:26px; height:26px; border-radius:50%;
+    background:var(--brand); cursor:pointer; border:3px solid var(--paper);
+    box-shadow:0 2px 8px rgba(232,70,31,0.4);
+  }
+  input[type=range].slider::-moz-range-thumb{
+    width:26px; height:26px; border-radius:50%; background:var(--brand);
+    cursor:pointer; border:3px solid var(--paper);
+    box-shadow:0 2px 8px rgba(232,70,31,0.4);
+  }
+
+  textarea.survey-text{
+    width:100%; min-height:120px; resize:vertical;
+    padding:14px 18px; border-radius:16px; border:2px solid var(--line);
+    background:var(--paper); color:var(--ink); font:inherit; line-height:1.5;
+  }
+  textarea.survey-text:focus{outline:none; border-color:var(--brand);}
+  input.survey-email{
+    width:100%; padding:14px 18px; border-radius:999px; border:2px solid var(--line);
+    background:var(--paper); font:inherit; color:var(--ink);
+  }
+  input.survey-email:focus{outline:none; border-color:var(--brand);}
+
+  .survey-nav{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:32px; gap:12px;
+  }
+  .survey-nav .btn{padding:12px 24px; font-size:0.95rem;}
+  .btn-ghost{
+    background:transparent; color:var(--ink-soft); border:none; cursor:pointer;
+    font-weight:600; font-size:0.95rem;
+  }
+  .btn-ghost:hover{color:var(--brand);}
+  .btn-ghost:disabled{opacity:0.35; cursor:not-allowed;}
+  .survey-error{color:var(--brand-dark); font-weight:600; font-size:0.9rem; margin-top:12px; min-height:1.2em;}
+
+  .survey-done{text-align:center; padding:20px 0;}
+  .survey-done .checkmark{
+    width:72px; height:72px; margin:0 auto 20px; border-radius:50%;
+    background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:2.2rem; font-weight:800;
+  }
+  .survey-done h3{font-size:1.6rem; margin-bottom:12px;}
+  .survey-done p{color:var(--ink-soft); margin-bottom:20px;}
+
   @media (max-width: 860px){
     .story-grid, .products-grid, .compare-grid{grid-template-columns:1fr;}
     nav ul{display:none;}
+    .survey-card{padding:32px 22px;}
   }
 </style>
 </head>
@@ -176,7 +281,7 @@
     <a href="#top" class="logo">Straight<span>Up</span> Candy</a>
     <ul>
       <li><a href="#story">Story</a></li>
-      <li><a href="#products">What We Make</a></li>
+      <li><a href="#survey">Survey</a></li>
       <li><a href="#signup" class="nav-cta">Get Notified</a></li>
     </ul>
   </nav>
@@ -247,6 +352,121 @@
       </div>
     </div>
   </section>
+  <section class="survey" id="survey">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Help us build it</span>
+        <h2>Take our 2-minute survey</h2>
+        <p>We're a new Utah candy company for people who love candy but care about what's in their food. Your answers shape the first lineup.</p>
+      </div>
+
+      <div class="survey-card" id="survey-card">
+        <div class="survey-progress"><div class="survey-progress-bar" id="survey-bar"></div></div>
+        <div class="survey-step-count" id="survey-count">Question 1 of 7</div>
+
+        <form id="survey-form" novalidate>
+          <!-- Q1 -->
+          <div class="survey-step active" data-step="1">
+            <h3>How often do you eat candy?</h3>
+            <ul class="opt-list">
+              <li><label><input type="radio" name="q1" value="Daily"> Daily</label></li>
+              <li><label><input type="radio" name="q1" value="A few times a week"> A few times a week</label></li>
+              <li><label><input type="radio" name="q1" value="A few times a month"> A few times a month</label></li>
+              <li><label><input type="radio" name="q1" value="Rarely"> Rarely</label></li>
+              <li><label><input type="radio" name="q1" value="Never"> Never</label></li>
+            </ul>
+          </div>
+
+          <!-- Q2 -->
+          <div class="survey-step" data-step="2">
+            <h3>How important are the ingredients in the candy you buy?</h3>
+            <ul class="opt-list">
+              <li><label><input type="radio" name="q2" value="Very important"> Very important</label></li>
+              <li><label><input type="radio" name="q2" value="Somewhat important"> Somewhat important</label></li>
+              <li><label><input type="radio" name="q2" value="Not very important"> Not very important</label></li>
+              <li><label><input type="radio" name="q2" value="Not important"> Not important at all</label></li>
+            </ul>
+          </div>
+
+          <!-- Q3 -->
+          <div class="survey-step" data-step="3">
+            <h3>What ingredients do you try to avoid in candy?</h3>
+            <p class="sub">Select all that apply.</p>
+            <ul class="opt-list">
+              <li><label><input type="checkbox" name="q3" value="Artificial colors"> Artificial colors</label></li>
+              <li><label><input type="checkbox" name="q3" value="Artificial flavors"> Artificial flavors</label></li>
+              <li><label><input type="checkbox" name="q3" value="Processed sugar / corn syrup"> Processed sugar / corn syrup</label></li>
+              <li><label><input type="checkbox" name="q3" value="Preservatives / additives"> Preservatives / additives</label></li>
+              <li><label><input type="checkbox" name="q3" value="Other" id="q3-other-toggle"> Other</label></li>
+              <li><label><input type="checkbox" name="q3" value="None" id="q3-none"> None — I don't avoid anything</label></li>
+            </ul>
+            <input type="text" class="opt-other" id="q3-other" name="q3_other" placeholder="What else?" hidden>
+          </div>
+
+          <!-- Q4 -->
+          <div class="survey-step" data-step="4">
+            <h3>How appealing is Straight Up Candy to you so far?</h3>
+            <div class="slider-wrap">
+              <div class="slider-value"><span id="q4-val">5</span><small>/10</small></div>
+              <input type="range" min="1" max="10" step="1" value="5" class="slider" name="q4" id="q4">
+              <div class="slider-scale"><span>Not at all</span><span>Very</span></div>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="survey-step" data-step="5">
+            <h3>After seeing the product and ingredients, how likely would you be to buy it?</h3>
+            <ul class="opt-list">
+              <li><label><input type="radio" name="q5" value="Very likely"> Very likely</label></li>
+              <li><label><input type="radio" name="q5" value="Likely"> Likely</label></li>
+              <li><label><input type="radio" name="q5" value="Maybe"> Maybe</label></li>
+              <li><label><input type="radio" name="q5" value="Unlikely"> Unlikely</label></li>
+            </ul>
+          </div>
+
+          <!-- Q6 -->
+          <div class="survey-step" data-step="6">
+            <h3>What would you expect to pay for a package of Straight Up Candy?</h3>
+            <ul class="opt-list">
+              <li><label><input type="radio" name="q6" value="$2–3"> $2–3</label></li>
+              <li><label><input type="radio" name="q6" value="$3–4"> $3–4</label></li>
+              <li><label><input type="radio" name="q6" value="$4–5"> $4–5</label></li>
+              <li><label><input type="radio" name="q6" value="$5+"> $5+</label></li>
+              <li><label><input type="radio" name="q6" value="Wouldn't pay for it"> I wouldn't pay for it</label></li>
+            </ul>
+          </div>
+
+          <!-- Q7 -->
+          <div class="survey-step" data-step="7">
+            <h3>What would make you choose Straight Up Candy over regular candy?</h3>
+            <p class="sub">Be honest — one sentence is fine.</p>
+            <textarea class="survey-text" name="q7" placeholder="e.g. cleaner ingredients I can actually pronounce…"></textarea>
+            <div style="margin-top:22px;">
+              <label style="display:block; font-weight:600; margin-bottom:8px; font-size:0.95rem;">
+                Email (optional — if you want early-access samples)
+              </label>
+              <input type="email" name="email" class="survey-email" placeholder="you@email.com">
+            </div>
+          </div>
+
+          <p class="survey-error" id="survey-error"></p>
+
+          <div class="survey-nav">
+            <button type="button" class="btn-ghost" id="survey-back" disabled>← Back</button>
+            <button type="button" class="btn btn-primary" id="survey-next">Next</button>
+          </div>
+        </form>
+
+        <div class="survey-done" id="survey-done" hidden>
+          <div class="checkmark">✓</div>
+          <h3>Thank you!</h3>
+          <p>Your input goes straight into shaping the first Straight Up Candy lineup. We'll be in touch when we launch.</p>
+          <a href="#signup" class="btn btn-outline">Also join the launch list</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="signup" id="signup">
     <div class="wrap">
       <div class="signup-box">
@@ -308,6 +528,154 @@
       submitBtn.textContent = 'Notify me';
     });
   });
+
+  /* ============================================================
+     SURVEY
+     ------------------------------------------------------------
+     Where responses go:
+       1. Best option — create a free Formspree form (formspree.io),
+          then paste its endpoint below, e.g.
+             var SURVEY_ENDPOINT = 'https://formspree.io/f/xyzabcde';
+       2. Leaving it empty falls back to opening the user's email
+          client with the responses pre-filled to hello@straightupcandy.com.
+     ============================================================ */
+  var SURVEY_ENDPOINT = '';           // <-- paste Formspree URL here
+  var SURVEY_FALLBACK_EMAIL = 'hello@straightupcandy.com';
+
+  (function(){
+    var form   = document.getElementById('survey-form');
+    if(!form) return;
+    var steps  = form.querySelectorAll('.survey-step');
+    var bar    = document.getElementById('survey-bar');
+    var count  = document.getElementById('survey-count');
+    var back   = document.getElementById('survey-back');
+    var next   = document.getElementById('survey-next');
+    var errBox = document.getElementById('survey-error');
+    var done   = document.getElementById('survey-done');
+    var total  = steps.length;
+    var cur    = 0;
+
+    // Q4 live slider value
+    var q4 = document.getElementById('q4');
+    var q4val = document.getElementById('q4-val');
+    q4.addEventListener('input', function(){ q4val.textContent = q4.value; });
+
+    // Q3 "Other" toggle + "None" exclusivity
+    var otherToggle = document.getElementById('q3-other-toggle');
+    var otherInput  = document.getElementById('q3-other');
+    var noneBox     = document.getElementById('q3-none');
+    otherToggle.addEventListener('change', function(){
+      otherInput.hidden = !otherToggle.checked;
+      if(otherToggle.checked) otherInput.focus();
+    });
+    form.querySelectorAll('input[name="q3"]').forEach(function(cb){
+      cb.addEventListener('change', function(){
+        if(cb === noneBox && cb.checked){
+          form.querySelectorAll('input[name="q3"]').forEach(function(o){
+            if(o !== noneBox) o.checked = false;
+          });
+          otherInput.hidden = true;
+        } else if(cb.checked && noneBox.checked){
+          noneBox.checked = false;
+        }
+      });
+    });
+
+    function render(){
+      steps.forEach(function(s,i){ s.classList.toggle('active', i === cur); });
+      bar.style.width = ((cur) / (total - 1) * 100) + '%';
+      count.textContent = 'Question ' + (cur + 1) + ' of ' + total;
+      back.disabled = cur === 0;
+      next.textContent = cur === total - 1 ? 'Submit' : 'Next';
+      errBox.textContent = '';
+    }
+
+    function validateStep(){
+      var step = steps[cur];
+      var qNum = cur + 1;
+      // Q3 checkbox group
+      if(qNum === 3){
+        var any = step.querySelectorAll('input[name="q3"]:checked').length;
+        if(!any){ errBox.textContent = 'Pick at least one option (or choose "None").'; return false; }
+        return true;
+      }
+      // Q7 open-ended — allow empty (skip)
+      if(qNum === 7){ return true; }
+      // Q4 slider always has a value
+      if(qNum === 4){ return true; }
+      // Radio questions
+      var picked = step.querySelector('input[type="radio"]:checked');
+      if(!picked){ errBox.textContent = 'Please pick an option to continue.'; return false; }
+      return true;
+    }
+
+    next.addEventListener('click', function(){
+      if(!validateStep()) return;
+      if(cur < total - 1){ cur++; render(); return; }
+      submit();
+    });
+    back.addEventListener('click', function(){
+      if(cur > 0){ cur--; render(); }
+    });
+
+    function collect(){
+      var fd = new FormData(form);
+      var out = {};
+      // Merge Q3 checkboxes into a single list
+      var q3vals = fd.getAll('q3');
+      if(q3vals.length) out['3. Ingredients avoided'] = q3vals.join(', ');
+      if(fd.get('q3_other')) out['3b. Other'] = fd.get('q3_other');
+      out['1. Candy frequency']      = fd.get('q1') || '';
+      out['2. Ingredient importance'] = fd.get('q2') || '';
+      out['4. Appeal (1-10)']         = fd.get('q4') || '';
+      out['5. Purchase likelihood']   = fd.get('q5') || '';
+      out['6. Expected price']        = fd.get('q6') || '';
+      out['7. Why choose us']         = fd.get('q7') || '';
+      if(fd.get('email')) out['Email'] = fd.get('email');
+      out['_submitted'] = new Date().toISOString();
+      return out;
+    }
+
+    function showDone(){
+      form.hidden = true;
+      document.querySelector('.survey-progress').hidden = true;
+      count.hidden = true;
+      done.hidden = false;
+    }
+
+    function submit(){
+      next.disabled = true;
+      next.textContent = 'Sending...';
+      var data = collect();
+
+      if(SURVEY_ENDPOINT){
+        fetch(SURVEY_ENDPOINT, {
+          method:'POST',
+          headers:{'Accept':'application/json','Content-Type':'application/json'},
+          body: JSON.stringify(data)
+        })
+        .then(function(r){
+          if(!r.ok) throw new Error('bad status');
+          showDone();
+        })
+        .catch(function(){
+          errBox.textContent = 'Could not send — please try again or email us directly.';
+          next.disabled = false;
+          next.textContent = 'Submit';
+        });
+      } else {
+        // Fallback: open email client with pre-filled body
+        var body = Object.keys(data).map(function(k){ return k + ': ' + data[k]; }).join('\n');
+        var mailto = 'mailto:' + SURVEY_FALLBACK_EMAIL
+                   + '?subject=' + encodeURIComponent('Straight Up Candy survey response')
+                   + '&body='    + encodeURIComponent(body);
+        window.location.href = mailto;
+        setTimeout(showDone, 300);
+      }
+    }
+
+    render();
+  })();
 </script>
 
 </body>

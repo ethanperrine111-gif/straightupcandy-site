@@ -727,6 +727,9 @@
         title: 'The last few times you bought candy, did you actually read the ingredient list?',
         hint: 'Be honest — no wrong answer.',
         options: ['Always', 'Sometimes', 'Rarely', 'Never'] },
+      { key: 'matters', type: 'single', kind: 'Single choice',
+        title: 'When picking a candy, what matters most to you?',
+        options: ['Taste', 'Clean ingredients', 'Price', 'Brand values', 'Familiar brand', 'Trying something new'] },
       { key: 'avoid', type: 'multi', kind: 'Select all', title: 'What ingredients do you try to avoid in candy?',
         hint: 'Select all that apply.',
         options: ['Artificial colors', 'Artificial flavors', 'High-fructose corn syrup', 'Seed oils',
@@ -737,8 +740,8 @@
         options: ['Smart Sweets', 'YumEarth', 'Unreal', "Lily's", 'Torie & Howard', "Trader Joe's own brand",
                   'Other', "I don't buy any"] },
       { key: 'appeal', type: 'slider', kind: '0 – 10', title: 'How appealing is Straight Up Candy to you so far?' },
-      { key: 'price', type: 'price', kind: 'Four numbers', title: 'What does a fair price look like to you?',
-        hint: 'Imagine a standard-size package. Gut numbers only.' },
+      { key: 'price', type: 'price', kind: 'Two sliders', title: 'What does a fair price look like to you?',
+        hint: 'Imagine a standard-size package. Slide to your number.' },
       { key: 'story', type: 'text', kind: 'Open text',
         title: 'Ever bought candy and felt like you had to compromise on ingredients?',
         hint: "Tell us what happened. Skip if it never does." },
@@ -748,11 +751,11 @@
     ];
 
     var PRICE_FIELDS = [
-      ['cheap',   "So cheap you'd doubt the quality"],
-      ['deal',    'Feels like a great deal'],
-      ['pricey',  'Expensive but still worth it'],
+      ['deal',    'A fair price'],
       ['toomuch', 'Too expensive to buy']
     ];
+    var PRICE_MIN = 0, PRICE_MAX = 20, PRICE_STEP = 0.25;
+    var PRICE_DEFAULTS = { deal: 4, toomuch: 10 };
 
     var CHANNELS = ['Grocery store', 'Health-food store', 'Online (our site)', 'Amazon',
                     'Local Utah retailer', 'Farmers market'];
@@ -923,22 +926,27 @@
       box.className = 'price-grid';
       PRICE_FIELDS.forEach(function(pair){
         var k = pair[0], label = pair[1];
-        var v = state.price[k] || '';
-        var row = document.createElement('label');
-        row.className = 'price-row';
+        var cur = state.price[k];
+        var v = (cur === '' || cur == null || isNaN(Number(cur))) ? PRICE_DEFAULTS[k] : Number(cur);
+        state.price[k] = String(v);
+        var row = document.createElement('div');
+        row.className = 'price-row slider-wrap';
         row.innerHTML =
           '<span class="lbl">' + esc(label) + '</span>' +
-          '<span class="price-input">' +
-            '<span class="dollar">$</span>' +
-            '<input type="number" min="0" step="0.01" placeholder="0" value="' + esc(v) + '" data-k="' + k + '" />' +
-          '</span>';
+          '<div class="slider-big"><span class="dollar">$</span><span data-out="' + k + '">' + v.toFixed(2) + '</span></div>' +
+          '<input type="range" min="' + PRICE_MIN + '" max="' + PRICE_MAX + '" step="' + PRICE_STEP + '" value="' + v + '" data-k="' + k + '" />' +
+          '<div class="slider-labels"><span>$' + PRICE_MIN + '</span><span>$' + PRICE_MAX + '+</span></div>';
         box.appendChild(row);
       });
       slot.appendChild(box);
-      slot.querySelectorAll('input').forEach(function(inp){
+      slot.querySelectorAll('input[type=range]').forEach(function(inp){
         inp.addEventListener('input', function(){
           markStarted();
-          state.price[inp.getAttribute('data-k')] = inp.value;
+          var k = inp.getAttribute('data-k');
+          var n = Number(inp.value);
+          state.price[k] = String(n);
+          var out = slot.querySelector('[data-out="' + k + '"]');
+          if (out) out.textContent = n.toFixed(2);
         });
       });
     }
@@ -958,37 +966,18 @@
 
     function renderFinal(q, slot){
       var email = state.answers.email || '';
-      var channel = state.answers.channel;
       var wrap = document.createElement('div');
       wrap.className = 'final-grid';
       wrap.innerHTML =
         '<div>' +
           '<label class="final-label" for="final-email">Email — optional, for early access</label>' +
           '<input type="email" id="final-email" class="email-input" placeholder="you@email.com" autocomplete="email" value="' + esc(email) + '" />' +
-        '</div>' +
-        '<div>' +
-          '<label class="final-label">Where would you most likely buy it?</label>' +
-          '<div class="chip-row" id="chip-row"></div>' +
         '</div>';
       slot.appendChild(wrap);
 
       wrap.querySelector('#final-email').addEventListener('input', function(e){
         markStarted();
         state.answers.email = e.target.value;
-      });
-
-      var chipRow = wrap.querySelector('#chip-row');
-      CHANNELS.forEach(function(label){
-        var chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'chip' + (channel === label ? ' selected' : '');
-        chip.textContent = label;
-        chip.addEventListener('click', function(){
-          markStarted();
-          state.answers.channel = state.answers.channel === label ? null : label;
-          render();
-        });
-        chipRow.appendChild(chip);
       });
     }
 
@@ -1028,16 +1017,14 @@
       var out = {};
       out['1. Candy frequency']           = a.freq || '';
       out['2. Reads ingredient list']     = a.reads || '';
-      out['3. Ingredients avoided']       = Array.isArray(a.avoid)  ? a.avoid.join(', ')  : '';
-      out['4. Current brands']            = Array.isArray(a.brands) ? a.brands.join(', ') : '';
-      out['5. Appeal (0-10)']             = (typeof a.appeal === 'number') ? a.appeal : '';
-      out['6a. Price - too cheap ($)']    = p.cheap   || '';
-      out['6b. Price - great deal ($)']   = p.deal    || '';
-      out['6c. Price - pricey ($)']       = p.pricey  || '';
-      out['6d. Price - too expensive ($)']= p.toomuch || '';
-      out['7. Compromise story']          = a.story   || '';
-      if (a.email)   out['8a. Email (waitlist)']      = a.email;
-      if (a.channel) out['8b. Preferred channel']     = a.channel;
+      out['3. Matters most when picking'] = a.matters || '';
+      out['4. Ingredients avoided']       = Array.isArray(a.avoid)  ? a.avoid.join(', ')  : '';
+      out['5. Current brands']            = Array.isArray(a.brands) ? a.brands.join(', ') : '';
+      out['6. Appeal (0-10)']             = (typeof a.appeal === 'number') ? a.appeal : '';
+      out['7a. Price - fair ($)']         = p.deal    || '';
+      out['7b. Price - too expensive ($)']= p.toomuch || '';
+      out['8. Compromise story']          = a.story   || '';
+      if (a.email)   out['9. Email (waitlist)']       = a.email;
       out['_session_id']            = sessionId;
       out['_time_to_complete_sec']  = startedAt ? Math.round((Date.now() - startedAt) / 1000) : null;
       out['_submitted']             = new Date().toISOString();

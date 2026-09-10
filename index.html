@@ -1139,6 +1139,19 @@
     var LS_KEY = 'suc_survey_state_v3';
     (function restore(){
       try {
+        // If someone lands directly on #survey (QR, nav link, direct URL)
+        // for the first time in this browser session, start fresh — so a
+        // stale in-progress state from a past visitor on this device
+        // doesn't dump the newcomer onto the last question.
+        var freshFromSurveyLink = location.hash === '#survey' && !sessionStorage.getItem('suc_survey_session');
+        if (freshFromSurveyLink) {
+          try { localStorage.removeItem(LS_KEY); } catch (_) {}
+          try { sessionStorage.setItem('suc_survey_session', '1'); } catch (_) {}
+          return;
+        }
+        // Mark the session so refreshes within the same tab still restore.
+        try { sessionStorage.setItem('suc_survey_session', '1'); } catch (_) {}
+
         var raw = localStorage.getItem(LS_KEY);
         if (!raw) return;
         var saved = JSON.parse(raw);

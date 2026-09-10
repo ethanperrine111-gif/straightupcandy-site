@@ -522,6 +522,275 @@
     .survey-body{ padding: 24px; gap: 18px; }
     .done{ padding: 40px 24px; }
   }
+
+  /* ================================================================
+     Taste-test — hidden by default; the QR-code URL takes over the
+     page and shows only this section. Piggybacks on --paper / --ink
+     tokens; extra local vars for anything the site doesn't already
+     have.
+     ================================================================ */
+  :root {
+    --taste-line: oklch(0.22 0.02 60 / 0.14);
+    --taste-line-2: oklch(0.22 0.02 60 / 0.24);
+    --taste-paper-2: oklch(0.94 0.018 92);
+    --taste-surface: #fff;
+  }
+  /* When a taste-test session is on, drop the rest of the site so
+     nothing distracts the respondent and the nav can't scroll them
+     back to the on-page 8-question survey. */
+  body.taste-mode { background: var(--paper); }
+  body.taste-mode header nav.primary,
+  body.taste-mode #top,
+  body.taste-mode #story,
+  body.taste-mode #difference,
+  body.taste-mode #survey,
+  body.taste-mode #signup,
+  body.taste-mode footer .contact { display: none !important; }
+  body.taste-mode #taste-test { display: block; }
+  body.taste-mode footer { justify-content: center; }
+
+  .taste { padding: 40px 20px 56px; }
+  .taste-shell { max-width: 640px; margin: 0 auto; }
+  .taste-hd { text-align: center; margin-bottom: 24px; }
+  .taste-eb {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--accent);
+    padding: 6px 14px; border: 1px solid var(--taste-line-2);
+    border-radius: 999px; background: var(--paper);
+  }
+  .taste-eb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .taste-hd h2 {
+    font-family: Archivo, Helvetica, Arial, sans-serif;
+    font-weight: 800; font-size: 42px; line-height: 1.05;
+    letter-spacing: -0.015em; text-transform: uppercase;
+    margin: 14px 0 6px; color: var(--ink);
+  }
+  .taste-hd h2 em {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic; font-weight: 500; color: var(--accent);
+    text-transform: lowercase; letter-spacing: 0;
+  }
+  .taste-hd p { color: var(--ink-mid); max-width: 460px; margin: 0 auto; font-size: 16px; }
+
+  .taste-card {
+    background: var(--taste-paper-2);
+    border: 1px solid var(--taste-line);
+    border-radius: 14px;
+    padding: 28px 28px 22px;
+    box-shadow: 0 1px 0 rgba(42,37,30,0.04), 0 12px 40px -16px rgba(42,37,30,0.18);
+  }
+  .taste-prog {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 600; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .taste-bar {
+    flex: 1; height: 2px; background: var(--taste-line);
+    border-radius: 2px; margin: 0 14px; overflow: hidden;
+  }
+  .taste-bar > span {
+    display: block; height: 100%; background: var(--ink);
+    border-radius: 2px; transition: width 240ms ease; width: 8%;
+  }
+  .taste-screen { color: var(--ink); }
+  .taste-num {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px;
+  }
+  .taste-q {
+    font-family: Archivo, Helvetica, Arial, sans-serif;
+    font-weight: 800; font-size: 26px; line-height: 1.15;
+    letter-spacing: -0.01em; margin: 0 0 8px; color: var(--ink);
+    text-wrap: balance;
+  }
+  .taste-hint { color: var(--ink-soft); font-size: 14px; margin: 0 0 18px; }
+  .taste-choices { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .taste-choice {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px; border: 1px solid var(--taste-line);
+    border-radius: 10px; background: var(--taste-surface);
+    cursor: pointer; font-weight: 500; color: var(--ink); position: relative;
+    transition: border-color 120ms ease;
+  }
+  .taste-choice:hover { border-color: var(--taste-line-2); }
+  .taste-choice input { position: absolute; opacity: 0; pointer-events: none; }
+  .taste-knob {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1.5px solid var(--taste-line-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 auto; background: #fff;
+  }
+  .taste-knob.sq { border-radius: 4px; }
+  .taste-choice input:checked + .taste-knob::after {
+    content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ink);
+  }
+  .taste-choice input:checked + .taste-knob { border-color: var(--ink); }
+  .taste-choice.selected { border-color: var(--ink); }
+  .taste-lbl { flex: 1; }
+  .taste-rank {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--accent); text-transform: uppercase;
+  }
+
+  .taste-other {
+    margin-top: 8px; padding: 12px 14px;
+    border: 1px solid var(--taste-line); border-radius: 10px;
+    background: var(--taste-surface); display: none;
+  }
+  .taste-other.show { display: block; }
+  .taste-other label {
+    display: block; font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-soft);
+    font-weight: 600; margin-bottom: 4px;
+  }
+  .taste-other input {
+    width: 100%; border: 0; outline: 0; font: inherit;
+    color: var(--ink); background: transparent; padding: 4px 0;
+  }
+
+  .taste-slider-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px; font-size: 13px; color: var(--ink-mid); font-weight: 500;
+  }
+  .taste-slider-row .val {
+    font-weight: 800; font-size: 18px; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .taste-slider-row .val .cur { color: var(--accent); }
+  .taste input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; background: transparent; height: 32px;
+  }
+  .taste input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px; background: var(--taste-line); border-radius: 2px;
+  }
+  .taste input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    height: 24px; width: 24px; background: var(--ink);
+    border: 4px solid var(--taste-paper-2);
+    box-shadow: 0 0 0 1px var(--ink);
+    border-radius: 50%; margin-top: -10px; cursor: pointer;
+  }
+  .taste input[type="range"]::-moz-range-track {
+    height: 4px; background: var(--taste-line); border-radius: 2px;
+  }
+  .taste input[type="range"]::-moz-range-thumb {
+    height: 18px; width: 18px; background: var(--ink);
+    border: 3px solid var(--taste-paper-2);
+    box-shadow: 0 0 0 1px var(--ink);
+    border-radius: 50%; cursor: pointer;
+  }
+  .taste-scale {
+    display: flex; justify-content: space-between; font-size: 11px;
+    color: var(--ink-soft); letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 600; margin-top: 2px;
+  }
+  .taste-price-grid { display: grid; gap: 14px; }
+  .taste-price-row {
+    padding: 12px 16px; background: var(--taste-surface);
+    border: 1px solid var(--taste-line); border-radius: 10px;
+  }
+  .taste-price-row.err { border-color: var(--accent); background: #FDF3F5; }
+  .taste-price-row .plabel {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  }
+  .taste-price-row .name { font-weight: 600; font-size: 14px; color: var(--ink); }
+  .taste-price-row .sub { font-size: 12px; color: var(--ink-soft); }
+  .taste-price-row .val {
+    font-weight: 800; font-size: 18px;
+    font-variant-numeric: tabular-nums; color: var(--ink);
+  }
+  .taste-price-err {
+    font-size: 12px; color: var(--accent); font-weight: 600;
+    margin-top: 8px; display: none;
+  }
+  .taste-price-err.show { display: block; }
+
+  .taste-piece {
+    width: 72px; height: 72px; margin: 12px auto 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #F5A9BE 0%, oklch(0.60 0.17 25) 60%, oklch(0.42 0.15 25) 100%);
+    box-shadow: inset -8px -8px 20px rgba(0,0,0,0.15), 0 12px 24px -8px oklch(0.60 0.17 25 / 0.5);
+    position: relative;
+  }
+  .taste-piece::after {
+    content: ""; position: absolute; top: 12px; left: 18px;
+    width: 22px; height: 12px; border-radius: 50%;
+    background: rgba(255,255,255,0.55); filter: blur(1px);
+  }
+  .taste-break { text-align: center; padding: 20px 8px; }
+  .taste-break h3 {
+    font-family: Archivo, Helvetica, Arial, sans-serif;
+    font-weight: 800; font-size: 38px; line-height: 1;
+    text-transform: uppercase; letter-spacing: -0.015em;
+    margin: 12px 0 0; color: var(--ink);
+  }
+  .taste-break h3 em {
+    display: block; font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic; font-weight: 500; color: var(--accent);
+    text-transform: lowercase; letter-spacing: 0;
+    font-size: 44px; margin-top: 4px;
+  }
+  .taste-break p { color: var(--ink-mid); max-width: 380px; margin: 14px auto 6px; }
+
+  .taste-yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .taste-yn .taste-choice {
+    justify-content: center; padding: 20px; font-size: 16px; font-weight: 700;
+  }
+  .taste-email {
+    display: block; padding: 14px 16px; background: var(--taste-surface);
+    border: 1px solid var(--taste-line); border-radius: 10px;
+    font: inherit; color: var(--ink); width: 100%; outline: none;
+  }
+  .taste-email:focus { border-color: var(--ink); }
+
+  .taste-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px; margin-top: 22px;
+  }
+  .taste-btn {
+    font-family: Archivo, Helvetica, Arial, sans-serif;
+    font-weight: 700; font-size: 14px; letter-spacing: 0.02em;
+    padding: 13px 22px; border-radius: 999px;
+    border: 1px solid transparent; cursor: pointer;
+    transition: transform 120ms ease, background 120ms ease, color 120ms ease, border-color 120ms ease;
+  }
+  .taste-btn.primary { background: var(--ink); color: var(--paper); }
+  .taste-btn.primary:hover { transform: translateY(-1px); }
+  .taste-btn.primary:disabled {
+    background: var(--taste-line); color: var(--ink-soft);
+    cursor: not-allowed; transform: none;
+  }
+  .taste-btn.ghost {
+    background: transparent; color: var(--ink-mid);
+    border-color: var(--taste-line-2);
+  }
+  .taste-btn.ghost:hover { color: var(--ink); border-color: var(--ink); }
+  .taste-btn.big { padding: 18px 34px; font-size: 15px; }
+
+  .taste-msg { text-align: center; padding: 30px 8px; }
+  .taste-msg h3 {
+    font-family: Archivo, Helvetica, Arial, sans-serif;
+    font-weight: 800; font-size: 32px; text-transform: uppercase;
+    margin: 0 0 8px; letter-spacing: -0.01em; color: var(--ink);
+  }
+  .taste-msg h3 em {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic; font-weight: 500; color: var(--accent);
+    text-transform: lowercase; letter-spacing: 0;
+  }
+  .taste-msg p { color: var(--ink-mid); max-width: 420px; margin: 6px auto 0; }
+
+  @media (max-width: 520px) {
+    .taste-card { padding: 22px 20px 18px; }
+    .taste-q { font-size: 22px; }
+    .taste-hd h2 { font-size: 32px; }
+    .taste-break h3 { font-size: 30px; }
+    .taste-break h3 em { font-size: 34px; }
+  }
 </style>
 </head>
 <body>
@@ -639,6 +908,34 @@
       <div class="survey-card">
         <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
         <div id="survey-root"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       TASTE-TEST SURVEY (hidden by default; revealed by QR-code URL:
+       /?k=x7q2m9br#taste-test — see the gate check in <script> below)
+       Posts to a separate Basin form so responses don't mix with the
+       on-page survey above.
+       ================================================================ -->
+  <section id="taste-test" class="taste" hidden aria-labelledby="taste-h">
+    <div class="taste-shell">
+      <div class="taste-hd">
+        <span class="taste-eb"><span class="taste-eb-dot"></span>Taste-test · invite only</span>
+        <h2 id="taste-h">You found it. <em>have a piece.</em></h2>
+        <p>Twelve short questions. Real answers — that's the whole point.</p>
+      </div>
+      <div class="taste-card">
+        <div class="taste-prog" id="tsProg">
+          <span id="tsStep">01 / 12</span>
+          <span class="taste-bar"><span id="tsBar"></span></span>
+          <span id="tsPct">8%</span>
+        </div>
+        <div id="tsScreen" class="taste-screen" aria-live="polite"></div>
+        <div class="taste-nav" id="tsNav">
+          <button class="taste-btn ghost" id="tsBack" type="button">Back</button>
+          <button class="taste-btn primary" id="tsNext" type="button">Continue</button>
+        </div>
       </div>
     </div>
   </section>
@@ -1230,6 +1527,590 @@
         if (btn) { btn.disabled = false; btn.textContent = 'Submit'; }
       });
     }
+
+    render();
+  })();
+
+  /* ================================================================
+     Taste-test gate + survey.
+     Only runs when the URL carries the invite token from the QR code:
+       https://straightupcandy.com/?k=x7q2m9br#taste-test
+     Without the token, the section stays hidden and the rest of the
+     site behaves normally.
+     ================================================================ */
+  (function(){
+    var TASTE_TOKEN = 'x7q2m9br';
+    var TASTE_ENDPOINT = 'https://usebasin.com/f/d3a09929cf32';
+
+    var params = new URLSearchParams(location.search);
+    if (params.get('k') !== TASTE_TOKEN) return; // no token → do nothing
+
+    var section = document.getElementById('taste-test');
+    if (!section) return;
+
+    // Take over the page
+    document.body.classList.add('taste-mode');
+    section.hidden = false;
+    document.title = 'Taste-test · Straight Up Candy';
+    // If the user landed on ?k=…#top or similar, force focus to the survey
+    setTimeout(function(){
+      section.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }, 0);
+
+    // ---- Small helpers
+    function el(tag, attrs, children){
+      var n = document.createElement(tag);
+      attrs = attrs || {};
+      for (var k in attrs){
+        if (k === 'class') n.className = attrs[k];
+        else if (k === 'html') n.innerHTML = attrs[k];
+        else if (k.slice(0,2) === 'on') n.addEventListener(k.slice(2), attrs[k]);
+        else if (attrs[k] === true) n.setAttribute(k, '');
+        else if (attrs[k] != null && attrs[k] !== false) n.setAttribute(k, attrs[k]);
+      }
+      (children || []).forEach(function(c){
+        if (c == null) return;
+        n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+      });
+      return n;
+    }
+    function shuffle(arr){
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
+    // ---- State
+    var answers = {};
+    var stepIdx = 0;
+    var SURVEY_LEN = 12;
+
+    // ---- Renderers
+    function radioList(key, options, opts){
+      opts = opts || {};
+      var wrap = el('div');
+      var ul = el('ul', {class: 'taste-choices'});
+      options.forEach(function(opt){
+        var id = 't-' + key + '-' + opt.value;
+        var inp = el('input', {type: 'radio', name: 't-' + key, id: id, value: opt.value});
+        var label = el('label', {class: 'taste-choice', for: id}, [
+          inp,
+          el('span', {class: 'taste-knob'}),
+          el('span', {class: 'taste-lbl'}, [opt.label])
+        ]);
+        if (answers[key] === opt.value) { inp.setAttribute('checked',''); label.classList.add('selected'); }
+        inp.addEventListener('change', function(){
+          answers[key] = opt.value;
+          ul.querySelectorAll('.taste-choice').forEach(function(c){ c.classList.remove('selected'); });
+          label.classList.add('selected');
+          if (opts.other) toggleOther(wrap, opt.value === 'other');
+          updateNav();
+        });
+        ul.appendChild(el('li', {}, [label]));
+      });
+      wrap.appendChild(ul);
+      if (opts.other){
+        var of = el('div', {class: 'taste-other' + (answers[key] === 'other' ? ' show' : '')}, [
+          el('label', {for: 't-' + key + '-other'}, ['What?']),
+          el('input', {type: 'text', id: 't-' + key + '-other', value: answers[key + '_other'] || '',
+            placeholder: 'Type it here',
+            oninput: function(e){ answers[key + '_other'] = e.target.value; }})
+        ]);
+        wrap.appendChild(of);
+      }
+      return wrap;
+    }
+
+    function toggleOther(root, show){
+      var of = root.querySelector('.taste-other');
+      if (!of) return;
+      of.classList.toggle('show', show);
+      if (show) setTimeout(function(){ var i = of.querySelector('input'); if (i) i.focus(); }, 60);
+    }
+
+    function checkboxList(key, options, opts){
+      opts = opts || {};
+      if (!answers[key]) answers[key] = [];
+      var wrap = el('div');
+      var ul = el('ul', {class: 'taste-choices'});
+      var srcOpts = opts.shuffleOpts
+        ? shuffle(options.filter(function(o){ return !o.pinned; })).concat(options.filter(function(o){ return o.pinned; }))
+        : options;
+      srcOpts.forEach(function(opt){
+        var id = 't-' + key + '-' + opt.value;
+        var inp = el('input', {type: 'checkbox', name: 't-' + key, id: id, value: opt.value});
+        var label = el('label', {class: 'taste-choice', for: id}, [
+          inp,
+          el('span', {class: 'taste-knob sq'}),
+          el('span', {class: 'taste-lbl'}, [opt.label])
+        ]);
+        if (answers[key].indexOf(opt.value) !== -1) { inp.setAttribute('checked',''); label.classList.add('selected'); }
+        inp.addEventListener('change', function(){
+          var arr = answers[key];
+          if (inp.checked){
+            if (opts.exclusive === opt.value){
+              answers[key] = [opt.value];
+              ul.querySelectorAll('input[type=checkbox]').forEach(function(x){
+                if (x !== inp){ x.checked = false; x.closest('label').classList.remove('selected'); }
+              });
+            } else {
+              if (opts.exclusive && arr.indexOf(opts.exclusive) !== -1){
+                var ex = ul.querySelector('#t-' + key + '-' + opts.exclusive);
+                if (ex){ ex.checked = false; ex.closest('label').classList.remove('selected'); }
+                answers[key] = arr.filter(function(v){ return v !== opts.exclusive; });
+              }
+              answers[key].push(opt.value);
+            }
+            label.classList.add('selected');
+          } else {
+            answers[key] = arr.filter(function(v){ return v !== opt.value; });
+            label.classList.remove('selected');
+          }
+          if (opts.other) toggleOther(wrap, answers[key].indexOf('other') !== -1);
+          updateNav();
+        });
+        ul.appendChild(el('li', {}, [label]));
+      });
+      wrap.appendChild(ul);
+      if (opts.other){
+        var of = el('div', {class: 'taste-other' + (answers[key].indexOf('other') !== -1 ? ' show' : '')}, [
+          el('label', {for: 't-' + key + '-other'}, ['Which one?']),
+          el('input', {type: 'text', id: 't-' + key + '-other', value: answers[key + '_other'] || '',
+            placeholder: 'Type it here',
+            oninput: function(e){ answers[key + '_other'] = e.target.value; }})
+        ]);
+        wrap.appendChild(of);
+      }
+      return wrap;
+    }
+
+    function ranked2(key, options){
+      if (!answers[key]) answers[key] = [];
+      var wrap = el('div');
+      var ul = el('ul', {class: 'taste-choices'});
+      function render(){
+        ul.querySelectorAll('.taste-choice').forEach(function(c){
+          var v = c.dataset.v;
+          var rank = answers[key].indexOf(v);
+          c.classList.toggle('selected', rank !== -1);
+          var rl = c.querySelector('.taste-rank');
+          rl.textContent = rank === 0 ? '#1' : rank === 1 ? '#2' : '';
+        });
+      }
+      shuffle(options).forEach(function(opt){
+        var label = el('label', {class: 'taste-choice', 'data-v': opt.value, tabindex: '0', role: 'button'}, [
+          el('span', {class: 'taste-knob sq'}),
+          el('span', {class: 'taste-lbl'}, [opt.label]),
+          el('span', {class: 'taste-rank'})
+        ]);
+        function toggle(){
+          var arr = answers[key];
+          var i = arr.indexOf(opt.value);
+          if (i !== -1) arr.splice(i, 1);
+          else if (arr.length < 2) arr.push(opt.value);
+          else { arr.shift(); arr.push(opt.value); }
+          render(); updateNav();
+        }
+        label.addEventListener('click', function(e){ e.preventDefault(); toggle(); });
+        label.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
+        ul.appendChild(el('li', {}, [label]));
+      });
+      wrap.appendChild(ul); render();
+      return wrap;
+    }
+
+    function slider0to10(key){
+      var val = answers[key] != null ? answers[key] : 5;
+      answers[key] = val;
+      var cur = el('span', {class: 'cur'}, [String(val)]);
+      var valEl = el('span', {class: 'val'}, [cur, ' / 10']);
+      var rng = el('input', {type: 'range', min: '0', max: '10', step: '1', value: String(val),
+        'aria-label': 'Appeal 0 to 10',
+        oninput: function(e){ answers[key] = +e.target.value; cur.textContent = String(answers[key]); }});
+      return el('div', {}, [
+        el('div', {class: 'taste-slider-row'}, [el('span', {}, ['Appeal']), valEl]),
+        rng,
+        el('div', {class: 'taste-scale'}, [el('span', {}, ['Not at all']), el('span', {}, ['Very'])])
+      ]);
+    }
+
+    function priceTri(key){
+      var state = answers[key] || {steal: 3, fair: 6, tooMuch: 10};
+      answers[key] = state;
+      var grid = el('div', {class: 'taste-price-grid'});
+      var errEl = el('div', {class: 'taste-price-err'}, ['Order needs to make sense: steal ≤ fair < too expensive.']);
+      var rows = [
+        {k: 'steal', name: "A steal", sub: "You'd grab it without thinking"},
+        {k: 'fair', name: 'A fair price', sub: 'Feels right'},
+        {k: 'tooMuch', name: 'Too expensive', sub: "You'd put it back"}
+      ];
+      function valid(){ return state.steal <= state.fair && state.fair < state.tooMuch; }
+      function check(){
+        var ok = valid();
+        errEl.classList.toggle('show', !ok);
+        grid.querySelectorAll('.taste-price-row').forEach(function(r){ r.classList.toggle('err', !ok); });
+        answers._priceValid = ok;
+        updateNav();
+      }
+      rows.forEach(function(r){
+        var price = el('span', {class: 'val'}, ['$' + state[r.k].toFixed(2)]);
+        var rng = el('input', {type: 'range', min: '0', max: '20', step: '0.25', value: String(state[r.k]),
+          'aria-label': r.name + ' price',
+          oninput: function(e){ state[r.k] = +e.target.value; price.textContent = '$' + state[r.k].toFixed(2); check(); }});
+        grid.appendChild(el('div', {class: 'taste-price-row'}, [
+          el('div', {class: 'plabel'}, [
+            el('div', {}, [el('div', {class: 'name'}, [r.name]), el('div', {class: 'sub'}, [r.sub])]),
+            price
+          ]),
+          rng
+        ]));
+      });
+      check();
+      return el('div', {}, [grid, errEl]);
+    }
+
+    // ---- Question options
+    var Q3_OPTS = [
+      {value: 'taste', label: 'Taste'},
+      {value: 'clean', label: 'Clean ingredients'},
+      {value: 'price', label: 'Price'},
+      {value: 'values', label: 'Brand values'},
+      {value: 'familiar', label: 'Familiar brand'},
+      {value: 'new', label: 'Trying something new'}
+    ];
+    var Q4_OPTS = [
+      {value: 'colors', label: 'Artificial colors'},
+      {value: 'flavors', label: 'Artificial flavors'},
+      {value: 'hfcs', label: 'High-fructose corn syrup'},
+      {value: 'seed', label: 'Seed oils'},
+      {value: 'preserv', label: 'Preservatives / additives'},
+      {value: 'gelatin', label: 'Gelatin'},
+      {value: 'other', label: 'Something else'},
+      {value: 'none', label: "Nothing — I don't avoid anything", pinned: true}
+    ];
+    var Q5_OPTS = [
+      {value: 'smartsweets', label: 'Smart Sweets'},
+      {value: 'yumearth', label: 'YumEarth'},
+      {value: 'unreal', label: 'Unreal'},
+      {value: 'lilys', label: "Lily's"},
+      {value: 'torie', label: 'Torie & Howard'},
+      {value: 'tj', label: "Trader Joe's own brand"},
+      {value: 'other', label: 'Another brand'},
+      {value: 'none', label: "I don't buy any", pinned: true}
+    ];
+
+    // ---- Steps
+    var STEPS = {
+      q1: {
+        canAdvance: function(){ return !!answers.q1_frequency; },
+        onNext: function(){ if (answers.q1_frequency === 'never') jumpTo('screener'); },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['01 · A few quick ones first']),
+            el('h2', {class: 'taste-q'}, ['How often do you eat candy?']),
+            radioList('q1_frequency', [
+              {value: 'daily', label: 'Daily'},
+              {value: 'weekly', label: 'A few times a week'},
+              {value: 'monthly', label: 'A few times a month'},
+              {value: 'rarely', label: 'Rarely'},
+              {value: 'never', label: 'Never'}
+            ])
+          );
+        }
+      },
+      q2: {
+        canAdvance: function(){ return !!answers.q2_reads_labels; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['02 · Labels']),
+            el('h2', {class: 'taste-q'}, ['Do you ever read the ingredient list when you buy candy?']),
+            el('p', {class: 'taste-hint'}, ['Be honest — no wrong answer.']),
+            radioList('q2_reads_labels', [
+              {value: 'always', label: 'Always'},
+              {value: 'sometimes', label: 'Sometimes'},
+              {value: 'rarely', label: 'Rarely'},
+              {value: 'never', label: 'Never'}
+            ])
+          );
+        }
+      },
+      q3: {
+        canAdvance: function(){ return (answers.q3_top2 || []).length === 2; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['03 · What matters']),
+            el('h2', {class: 'taste-q'}, ['When picking a candy, what matters most?']),
+            el('p', {class: 'taste-hint'}, ['Tap your #1 first, then your #2.']),
+            ranked2('q3_top2', Q3_OPTS)
+          );
+        }
+      },
+      q4: {
+        canAdvance: function(){ return (answers.q4_avoid || []).length > 0; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['04 · The avoid list']),
+            el('h2', {class: 'taste-q'}, ['What ingredients do you try to avoid in candy?']),
+            el('p', {class: 'taste-hint'}, ['Select all that apply.']),
+            checkboxList('q4_avoid', Q4_OPTS, {other: true, exclusive: 'none'})
+          );
+        }
+      },
+      q5: {
+        canAdvance: function(){ return (answers.q5_brands || []).length > 0; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['05 · The competition']),
+            el('h2', {class: 'taste-q'}, ['When you buy "better-for-you" candy today, which brands do you reach for?']),
+            el('p', {class: 'taste-hint'}, ['This helps us know where we fit.']),
+            checkboxList('q5_brands', Q5_OPTS, {other: true, exclusive: 'none', shuffleOpts: true})
+          );
+        }
+      },
+      taste: {
+        canAdvance: function(){ return true; },
+        render: function(c){
+          c.replaceChildren(
+            el('div', {class: 'taste-break'}, [
+              el('span', {class: 'taste-num'}, ['06 · Try it now']),
+              el('div', {class: 'taste-piece', role: 'presentation'}),
+              el('h3', {}, ["You're up.", el('em', {}, ['have a piece.'])]),
+              el('p', {}, ['Grab a piece of Straight Up Candy and give it a real taste. The next questions are about what you just tried.'])
+            ])
+          );
+          var nb = document.getElementById('tsNext');
+          nb.textContent = "I've tasted it — continue";
+          nb.classList.add('big');
+        }
+      },
+      q7: {
+        canAdvance: function(){ return answers.q7_appeal != null; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['07 · First taste']),
+            el('h2', {class: 'taste-q'}, ["How appealing is it now that you've tried it?"]),
+            slider0to10('q7_appeal')
+          );
+        }
+      },
+      q8: {
+        canAdvance: function(){ return !!answers.q8_stackup; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['08 · Head-to-head']),
+            el('h2', {class: 'taste-q'}, ['Compared to the candy you usually eat, how does it stack up?']),
+            radioList('q8_stackup', [
+              {value: 'much_worse', label: 'Much worse'},
+              {value: 'worse', label: 'Worse'},
+              {value: 'same', label: 'About the same'},
+              {value: 'better', label: 'Better'},
+              {value: 'much_better', label: 'Much better'}
+            ])
+          );
+        }
+      },
+      q9: {
+        canAdvance: function(){ return !!answers.q9_buy; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['09 · On the shelf']),
+            el('h2', {class: 'taste-q'}, ['If it were next to your usual candy at the same price, would you buy it?']),
+            radioList('q9_buy', [
+              {value: 'definitely', label: 'Definitely'},
+              {value: 'probably', label: 'Probably'},
+              {value: 'once', label: 'Might try once'},
+              {value: 'probably_not', label: 'Probably not'},
+              {value: 'definitely_not', label: 'Definitely not'}
+            ])
+          );
+        }
+      },
+      q10: {
+        canAdvance: function(){ return !!answers._priceValid; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ["10 · What it's worth"]),
+            el('h2', {class: 'taste-q'}, ['What price feels right, now that you’ve tasted it?']),
+            el('p', {class: 'taste-hint'}, ['Imagine a standard-size package. Slide each one.']),
+            priceTri('q10_price')
+          );
+        }
+      },
+      q11: {
+        canAdvance: function(){ return !!answers.q11_compromise; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['11 · The catch']),
+            el('h2', {class: 'taste-q'}, ['Ever bought candy and felt like you had to compromise on ingredients?']),
+            radioList('q11_compromise', [
+              {value: 'yes', label: 'Yes, sometimes'},
+              {value: 'no', label: 'No, not really'}
+            ])
+          );
+        }
+      },
+      q12: {
+        canAdvance: function(){ return true; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['12 · Want in early?']),
+            el('h2', {class: 'taste-q'}, ['Want early access + a launch discount?']),
+            el('p', {class: 'taste-hint'}, ["Optional — leave it blank if you'd rather not."]),
+            el('input', {type: 'email', class: 'taste-email', placeholder: 'you@email.com',
+              value: answers.q12_email || '',
+              oninput: function(e){ answers.q12_email = e.target.value; }})
+          );
+          document.getElementById('tsNext').textContent = 'Submit';
+        }
+      },
+      thanks: {
+        canAdvance: function(){ return false; },
+        hideNav: true,
+        render: function(c){
+          var emailed = answers.q12_email && answers.q12_email.indexOf('@') !== -1;
+          c.replaceChildren(
+            el('div', {class: 'taste-msg'}, [
+              el('h3', {}, ['Thank you, ', el('em', {}, ['seriously.'])]),
+              el('p', {}, [emailed
+                ? "You're on the list. We'll send early access and a launch discount when the first lineup drops."
+                : "You just helped shape a candy that reads its own label."])
+            ])
+          );
+        }
+      },
+      screener: {
+        canAdvance: function(){ return false; },
+        hideNav: true,
+        render: function(c){
+          c.replaceChildren(
+            el('div', {class: 'taste-msg'}, [
+              el('h3', {}, ["No candy? ", el('em', {}, ["we'll let you go."])]),
+              el('p', {}, ["Totally fair. Thanks for stopping by — this one's for people who actually eat the stuff."])
+            ])
+          );
+        }
+      }
+    };
+
+    var order = ['q1','q2','q3','q4','q5','taste','q7','q8','q9','q10','q11','q12','thanks'];
+
+    function updateNav(){
+      var step = STEPS[order[stepIdx]];
+      document.getElementById('tsNext').disabled = !step.canAdvance();
+    }
+
+    function render(){
+      var id = order[stepIdx];
+      var step = STEPS[id];
+      var screen = document.getElementById('tsScreen');
+      var nb = document.getElementById('tsNext');
+      var bb = document.getElementById('tsBack');
+      var nav = document.getElementById('tsNav');
+      nb.textContent = 'Continue'; nb.classList.remove('big');
+      nav.style.display = 'flex';
+      step.render(screen);
+
+      var showProgress = id !== 'thanks' && id !== 'screener';
+      var prog = document.getElementById('tsProg');
+      prog.style.visibility = showProgress ? 'visible' : 'hidden';
+      if (showProgress){
+        var s = stepIdx + 1;
+        var pct = Math.round(s / SURVEY_LEN * 100);
+        document.getElementById('tsStep').textContent = String(s).padStart(2,'0') + ' / ' + String(SURVEY_LEN).padStart(2,'0');
+        document.getElementById('tsBar').style.width = pct + '%';
+        document.getElementById('tsPct').textContent = pct + '%';
+      }
+      var atExit = id === 'thanks' || id === 'screener';
+      bb.disabled = stepIdx === 0 || atExit;
+      bb.style.visibility = (stepIdx === 0 || atExit) ? 'hidden' : 'visible';
+      if (step.hideNav) nav.style.display = 'none';
+      updateNav();
+    }
+
+    function jumpTo(name){
+      var i = order.indexOf(name);
+      if (i !== -1){ stepIdx = i; render(); }
+    }
+
+    document.getElementById('tsBack').addEventListener('click', function(){
+      if (stepIdx > 0){ stepIdx--; render(); }
+    });
+    document.getElementById('tsNext').addEventListener('click', function(){
+      var step = STEPS[order[stepIdx]];
+      if (!step.canAdvance()) return;
+      if (step.onNext) step.onNext();
+      if (order[stepIdx] === 'q12'){ submit(); }
+      if (stepIdx < order.length - 1){ stepIdx++; render(); }
+    });
+
+    // ---- Submit → separate Basin form
+    function buildPayload(){
+      var p = answers.q10_price || {};
+      var avoidList = (answers.q4_avoid || []).slice();
+      if (avoidList.indexOf('other') !== -1 && answers.q4_avoid_other){
+        avoidList = avoidList.filter(function(v){ return v !== 'other'; }).concat('other: ' + answers.q4_avoid_other);
+      }
+      var brandList = (answers.q5_brands || []).slice();
+      if (brandList.indexOf('other') !== -1 && answers.q5_brands_other){
+        brandList = brandList.filter(function(v){ return v !== 'other'; }).concat('other: ' + answers.q5_brands_other);
+      }
+      return {
+        freq:    answers.q1_frequency || '',
+        reads:   answers.q2_reads_labels || '',
+        matters: (answers.q3_top2 || []).join(', '),
+        avoid:   avoidList.join(', '),
+        brands:  brandList.join(', '),
+        appeal:  answers.q7_appeal != null ? String(answers.q7_appeal) : '',
+        stackup: answers.q8_stackup || '',
+        intent:  answers.q9_buy || '',
+        price:   p.steal != null
+          ? 'steal $' + p.steal.toFixed(2) + ' · fair $' + p.fair.toFixed(2) + ' · too much $' + p.tooMuch.toFixed(2)
+          : '',
+        story:   answers.q11_compromise || '',
+        final:   answers.q12_email || '',
+        _source: 'taste-test-qr',
+        _submitted_at: new Date().toISOString()
+      };
+    }
+
+    function submit(){
+      var payload = buildPayload();
+      try {
+        fetch(TASTE_ENDPOINT, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+          body: JSON.stringify(payload),
+          keepalive: true
+        });
+      } catch (_){
+        try {
+          var blob = new Blob([JSON.stringify(payload)], {type: 'application/json'});
+          if (navigator.sendBeacon) navigator.sendBeacon(TASTE_ENDPOINT, blob);
+        } catch (__){}
+      }
+    }
+
+    function sendPartial(){
+      var id = order[stepIdx];
+      if (id === 'thanks' || id === 'screener') return;
+      if (Object.keys(answers).length === 0) return;
+      try {
+        var data = buildPayload();
+        data._partial = true;
+        data._last_step = stepIdx + 1;
+        data._last_key = id;
+        var blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        if (navigator.sendBeacon) navigator.sendBeacon(TASTE_ENDPOINT, blob);
+      } catch (_){}
+    }
+    window.addEventListener('pagehide', sendPartial);
+    document.addEventListener('visibilitychange', function(){
+      if (document.visibilityState === 'hidden') sendPartial();
+    });
 
     render();
   })();

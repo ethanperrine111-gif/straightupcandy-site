@@ -732,11 +732,11 @@
       { key: 'freq',  type: 'single', kind: 'Single choice', title: 'How often do you eat candy?',
         options: ['Daily', 'A few times a week', 'A few times a month', 'Rarely', 'Never'] },
       { key: 'reads', type: 'single', kind: 'Single choice',
-        title: 'The last few times you bought candy, did you actually read the ingredient list?',
+        title: 'Do you ever read the ingredient list when you buy candy?',
         hint: 'Be honest — no wrong answer.',
         options: ['Always', 'Sometimes', 'Rarely', 'Never'] },
       { key: 'matters', type: 'rank', kind: 'Pick your top 2',
-        title: 'When picking a candy, what matters most to you?',
+        title: 'When picking a candy, what matters most to you? (Pick two)',
         hint: 'Tap your #1 first, then your #2.',
         options: ['Taste', 'Clean ingredients', 'Price', 'Brand values', 'Familiar brand', 'Trying something new'],
         shuffle: true },
@@ -752,26 +752,20 @@
         options: ['Smart Sweets', 'YumEarth', 'Unreal', "Lily's", 'Torie & Howard', "Trader Joe's own brand",
                   'Other', "I don't buy any"],
         shuffle: true, pin: ['Other', "I don't buy any"], otherKey: 'brands_other' },
-      { key: 'format', type: 'multi', kind: 'Select all',
-        title: 'Which candy formats do you actually reach for?',
-        hint: 'Helps us pick what to make first.',
-        options: ['Gummies / chews', 'Chocolate bars', 'Hard candy / lollipops', 'Sour candy',
-                  'Fruit snacks', 'Caramels / toffee', 'Mints', 'Other'],
-        shuffle: true, pin: ['Other'], otherKey: 'format_other' },
       { key: 'appeal', type: 'slider', kind: '0 – 10',
         title: 'How appealing is Straight Up Candy to you so far?' },
       { key: 'intent', type: 'single', kind: 'Single choice',
-        title: 'If it were on the shelf next to your usual candy at a fair price, would you buy it?',
+        title: 'If it were on the shelf next to your usual candy at the same price, would you buy it?',
         options: ['Definitely', 'Probably', 'Might try once', 'Probably not', 'Definitely not'] },
       { key: 'price', type: 'price', kind: 'Three sliders',
         title: 'What price feels right?',
         hint: 'Imagine a standard-size package. Slide each one.' },
-      { key: 'story', type: 'text', kind: 'Open text',
+      { key: 'story', type: 'single', kind: 'Yes or no',
         title: 'Ever bought candy and felt like you had to compromise on ingredients?',
-        hint: "Tell us what happened. Skip if it never does." },
+        options: ['Yes', 'No'] },
       { key: 'final', type: 'final', kind: 'Almost done',
-        title: 'Want $2 off at launch?',
-        hint: 'Drop your email and we\'ll send a code when the first drop is live. All fields optional.' }
+        title: 'Want early access + a launch discount?',
+        hint: 'Email is optional.' }
     ];
 
     var PRICE_FIELDS = [
@@ -781,8 +775,6 @@
     ];
     var PRICE_MIN = 0, PRICE_MAX = 20, PRICE_STEP = 0.25;
     var PRICE_DEFAULTS = { steal: 2, deal: 4, toomuch: 10 };
-
-    var HEARD_OPTIONS = ['Friend', 'Instagram', 'TikTok', 'Reddit', 'Google', 'Local event', 'Other'];
 
     var state = { step: 0, answers: {}, price: {}, phase: 'asking', exited: false,
                   screener: '', shuffles: {} };
@@ -807,7 +799,7 @@
     })();
 
     // Persist in-progress answers so refreshes don't wipe them
-    var LS_KEY = 'suc_survey_state_v2';
+    var LS_KEY = 'suc_survey_state_v3';
     (function restore(){
       try {
         var raw = localStorage.getItem(LS_KEY);
@@ -1115,17 +1107,12 @@
 
     function renderFinal(q, slot){
       var email = state.answers.email || '';
-      var heard = state.answers.heard || '';
       var wrap = document.createElement('div');
       wrap.className = 'final-grid';
       wrap.innerHTML =
         '<div>' +
-          '<label class="final-label" for="final-email">Email — we\'ll send a $2-off code at launch</label>' +
+          '<label class="final-label" for="final-email">Email — optional, for early access</label>' +
           '<input type="email" id="final-email" class="email-input" placeholder="you@email.com" autocomplete="email" value="' + esc(email) + '" />' +
-        '</div>' +
-        '<div>' +
-          '<label class="final-label">How\'d you hear about us?</label>' +
-          '<div class="chip-row" id="heard-row"></div>' +
         '</div>';
       slot.appendChild(wrap);
 
@@ -1133,21 +1120,6 @@
         markStarted();
         state.answers.email = e.target.value;
         persist();
-      });
-
-      var heardRow = wrap.querySelector('#heard-row');
-      HEARD_OPTIONS.forEach(function(label){
-        var chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'chip' + (heard === label ? ' selected' : '');
-        chip.textContent = label;
-        chip.addEventListener('click', function(){
-          markStarted();
-          state.answers.heard = state.answers.heard === label ? null : label;
-          persist();
-          render();
-        });
-        heardRow.appendChild(chip);
       });
     }
 
@@ -1221,16 +1193,13 @@
       if (a.avoid_other)  out['4b. Ingredients avoided - other'] = a.avoid_other;
       out['5. Current brands']             = Array.isArray(a.brands) ? a.brands.join(', ') : '';
       if (a.brands_other) out['5b. Current brands - other']      = a.brands_other;
-      out['6. Formats reached for']        = Array.isArray(a.format) ? a.format.join(', ') : '';
-      if (a.format_other) out['6b. Formats - other']             = a.format_other;
-      out['7. Appeal (0-10)']              = (typeof a.appeal === 'number') ? a.appeal : '';
-      out['8. Purchase intent']            = a.intent || '';
-      out['9a. Price - a steal ($)']       = p.steal   || '';
-      out['9b. Price - fair ($)']          = p.deal    || '';
-      out['9c. Price - too expensive ($)'] = p.toomuch || '';
-      out['10. Compromise story']          = a.story || '';
-      if (a.email) out['11a. Email (waitlist)'] = a.email;
-      if (a.heard) out['11b. How they heard']   = a.heard;
+      out['6. Appeal (0-10)']              = (typeof a.appeal === 'number') ? a.appeal : '';
+      out['7. Purchase intent']            = a.intent || '';
+      out['8a. Price - a steal ($)']       = p.steal   || '';
+      out['8b. Price - fair ($)']          = p.deal    || '';
+      out['8c. Price - too expensive ($)'] = p.toomuch || '';
+      out['9. Ingredient compromise']      = a.story || '';
+      if (a.email) out['10. Email (waitlist)'] = a.email;
       out['_screener']              = state.screener || '';
       out['_session_id']            = sessionId;
       out['_time_to_complete_sec']  = startedAt ? Math.round((Date.now() - startedAt) / 1000) : null;

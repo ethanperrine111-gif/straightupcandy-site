@@ -321,6 +321,14 @@
   .opt:hover{ border-color: var(--ink); }
   .opt.selected{ border-color: var(--ink); background: var(--ink); color: var(--paper); }
   .opt .mark{ font-family: 'Space Mono', ui-monospace, Menlo, monospace; font-size: 12px; opacity: 0.85; }
+  .opt.rank-1 .mark, .opt.rank-2 .mark{ font-weight: 700; }
+  .opt.rank-1{ border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .opt.rank-2{ border-color: var(--ink); background: oklch(0.22 0.02 60 / 0.75); color: var(--paper); }
+  .other-input{
+    width: 100%; margin-top: 8px; padding: 12px 14px;
+    border: 1px solid var(--ink-line-3); border-radius: 3px;
+    background: var(--paper); font-size: 15px;
+  }
 
   .slider-wrap{ padding: 14px 0; }
   .slider-big{ font-size: 58px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
@@ -727,40 +735,57 @@
         title: 'The last few times you bought candy, did you actually read the ingredient list?',
         hint: 'Be honest — no wrong answer.',
         options: ['Always', 'Sometimes', 'Rarely', 'Never'] },
-      { key: 'matters', type: 'single', kind: 'Single choice',
+      { key: 'matters', type: 'rank', kind: 'Pick your top 2',
         title: 'When picking a candy, what matters most to you?',
-        options: ['Taste', 'Clean ingredients', 'Price', 'Brand values', 'Familiar brand', 'Trying something new'] },
-      { key: 'avoid', type: 'multi', kind: 'Select all', title: 'What ingredients do you try to avoid in candy?',
+        hint: 'Tap your #1 first, then your #2.',
+        options: ['Taste', 'Clean ingredients', 'Price', 'Brand values', 'Familiar brand', 'Trying something new'],
+        shuffle: true },
+      { key: 'avoid', type: 'multi', kind: 'Select all',
+        title: 'What ingredients do you try to avoid in candy?',
         hint: 'Select all that apply.',
         options: ['Artificial colors', 'Artificial flavors', 'High-fructose corn syrup', 'Seed oils',
-                  'Preservatives / additives', 'Gelatin', 'Other', "None — I don't avoid anything"] },
+                  'Preservatives / additives', 'Gelatin', 'Other', "None — I don't avoid anything"],
+        pin: ['Other', "None — I don't avoid anything"], otherKey: 'avoid_other' },
       { key: 'brands', type: 'multi', kind: 'Select all',
         title: 'When you buy "better-for-you" candy today, which brands do you reach for?',
         hint: 'This helps us know where we fit.',
         options: ['Smart Sweets', 'YumEarth', 'Unreal', "Lily's", 'Torie & Howard', "Trader Joe's own brand",
-                  'Other', "I don't buy any"] },
-      { key: 'appeal', type: 'slider', kind: '0 – 10', title: 'How appealing is Straight Up Candy to you so far?' },
-      { key: 'price', type: 'price', kind: 'Two sliders', title: 'What does a fair price look like to you?',
-        hint: 'Imagine a standard-size package. Slide to your number.' },
+                  'Other', "I don't buy any"],
+        shuffle: true, pin: ['Other', "I don't buy any"], otherKey: 'brands_other' },
+      { key: 'format', type: 'multi', kind: 'Select all',
+        title: 'Which candy formats do you actually reach for?',
+        hint: 'Helps us pick what to make first.',
+        options: ['Gummies / chews', 'Chocolate bars', 'Hard candy / lollipops', 'Sour candy',
+                  'Fruit snacks', 'Caramels / toffee', 'Mints', 'Other'],
+        shuffle: true, pin: ['Other'], otherKey: 'format_other' },
+      { key: 'appeal', type: 'slider', kind: '0 – 10',
+        title: 'How appealing is Straight Up Candy to you so far?' },
+      { key: 'intent', type: 'single', kind: 'Single choice',
+        title: 'If it were on the shelf next to your usual candy at a fair price, would you buy it?',
+        options: ['Definitely', 'Probably', 'Might try once', 'Probably not', 'Definitely not'] },
+      { key: 'price', type: 'price', kind: 'Three sliders',
+        title: 'What price feels right?',
+        hint: 'Imagine a standard-size package. Slide each one.' },
       { key: 'story', type: 'text', kind: 'Open text',
         title: 'Ever bought candy and felt like you had to compromise on ingredients?',
         hint: "Tell us what happened. Skip if it never does." },
       { key: 'final', type: 'final', kind: 'Almost done',
-        title: 'Want early access + a launch discount?',
-        hint: 'Both fields optional.' }
+        title: 'Want $2 off at launch?',
+        hint: 'Drop your email and we\'ll send a code when the first drop is live. All fields optional.' }
     ];
 
     var PRICE_FIELDS = [
+      ['steal',   'A steal — you\'d grab it without thinking'],
       ['deal',    'A fair price'],
       ['toomuch', 'Too expensive to buy']
     ];
     var PRICE_MIN = 0, PRICE_MAX = 20, PRICE_STEP = 0.25;
-    var PRICE_DEFAULTS = { deal: 4, toomuch: 10 };
+    var PRICE_DEFAULTS = { steal: 2, deal: 4, toomuch: 10 };
 
-    var CHANNELS = ['Grocery store', 'Health-food store', 'Online (our site)', 'Amazon',
-                    'Local Utah retailer', 'Farmers market'];
+    var HEARD_OPTIONS = ['Friend', 'Instagram', 'TikTok', 'Reddit', 'Google', 'Local event', 'Other'];
 
-    var state = { step: 0, answers: {}, price: {}, phase: 'asking', exited: false };
+    var state = { step: 0, answers: {}, price: {}, phase: 'asking', exited: false,
+                  screener: '', shuffles: {} };
     var startedAt = null;
 
     var root = document.getElementById('survey-root');
@@ -781,7 +806,75 @@
       } catch (_) { return Date.now().toString(36); }
     })();
 
+    // Persist in-progress answers so refreshes don't wipe them
+    var LS_KEY = 'suc_survey_state_v2';
+    (function restore(){
+      try {
+        var raw = localStorage.getItem(LS_KEY);
+        if (!raw) return;
+        var saved = JSON.parse(raw);
+        if (saved && saved.phase === 'asking') {
+          state.step     = Math.min(saved.step || 0, QUESTIONS.length - 1);
+          state.answers  = saved.answers || {};
+          state.price    = saved.price || {};
+          state.screener = saved.screener || '';
+          state.shuffles = saved.shuffles || {};
+          if (saved.startedAt) startedAt = saved.startedAt;
+        }
+      } catch (_) {}
+    })();
+    function persist(){
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify({
+          step: state.step, answers: state.answers, price: state.price,
+          screener: state.screener, shuffles: state.shuffles,
+          phase: state.phase, startedAt: startedAt
+        }));
+      } catch (_) {}
+    }
+    function clearPersist(){ try { localStorage.removeItem(LS_KEY); } catch (_) {} }
+
     function markStarted(){ if (!startedAt) startedAt = Date.now(); }
+
+    // Cached shuffle for a given question (keeps order stable across renders)
+    function orderedOptions(q){
+      var pin = q.pin || [];
+      var pinned  = q.options.filter(function(o){ return pin.indexOf(o) > -1; });
+      var movable = q.options.filter(function(o){ return pin.indexOf(o) === -1; });
+      if (q.shuffle) {
+        var cached = state.shuffles[q.key];
+        if (!cached || cached.length !== movable.length) {
+          var arr = movable.slice();
+          for (var i = arr.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+          }
+          state.shuffles[q.key] = arr;
+          cached = arr;
+        }
+        movable = cached;
+      }
+      return movable.concat(pinned);
+    }
+
+    // Send a partial-response beacon if someone abandons the survey
+    function sendPartialBeacon(){
+      if (state.phase !== 'asking') return;
+      if (!startedAt) return; // never engaged
+      if (state.step === 0 && Object.keys(state.answers).length === 0) return;
+      try {
+        var data = collect();
+        data['_partial']   = true;
+        data['_last_step'] = state.step + 1;
+        data['_last_key']  = (QUESTIONS[state.step] || {}).key || '';
+        var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        if (navigator.sendBeacon) navigator.sendBeacon(SURVEY_ENDPOINT, blob);
+      } catch (_) {}
+    }
+    window.addEventListener('pagehide', sendPartialBeacon);
+    document.addEventListener('visibilitychange', function(){
+      if (document.visibilityState === 'hidden') sendPartialBeacon();
+    });
 
     function esc(s){
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -816,8 +909,10 @@
             '</div>' +
           '</div>';
         document.getElementById('restart-btn').addEventListener('click', function(){
-          state = { step: 0, answers: {}, price: {}, phase: 'asking', exited: false };
+          state = { step: 0, answers: {}, price: {}, phase: 'asking', exited: false,
+                    screener: '', shuffles: {} };
           startedAt = null;
+          clearPersist();
           render();
         });
         return;
@@ -831,8 +926,8 @@
       body.className = 'survey-body';
       body.innerHTML =
         '<div class="survey-meta">' +
-          '<span>Question ' + (state.step + 1) + ' of ' + QUESTIONS.length + '</span>' +
           '<span>' + esc(q.kind) + '</span>' +
+          '<span>~2 min</span>' +
         '</div>' +
         '<div>' +
           '<h3 class="q-title">' + esc(q.title) + '</h3>' +
@@ -857,6 +952,8 @@
     function renderQuestionBody(q, slot){
       if (q.type === 'single' || q.type === 'multi') {
         renderChoices(q, slot);
+      } else if (q.type === 'rank') {
+        renderRank(q, slot);
       } else if (q.type === 'slider') {
         renderSlider(q, slot);
       } else if (q.type === 'price') {
@@ -872,7 +969,8 @@
       var answer = state.answers[q.key];
       var box = document.createElement('div');
       box.className = 'options';
-      q.options.forEach(function(label){
+      var opts = orderedOptions(q);
+      opts.forEach(function(label){
         var selected = q.type === 'single'
           ? answer === label
           : Array.isArray(answer) && answer.indexOf(label) > -1;
@@ -892,6 +990,54 @@
               ? cur.filter(function(v){ return v !== label; })
               : cur.concat([label]);
           }
+          persist();
+          render();
+        });
+        box.appendChild(btn);
+      });
+      // "Other" free-text reveal for multi-selects that opt in
+      if (q.type === 'multi' && q.otherKey) {
+        var picked = state.answers[q.key] || [];
+        if (picked.indexOf('Other') > -1) {
+          var otherVal = state.answers[q.otherKey] || '';
+          var input = document.createElement('input');
+          input.type = 'text';
+          input.className = 'other-input';
+          input.placeholder = 'Other — what?';
+          input.value = otherVal;
+          input.addEventListener('input', function(){
+            state.answers[q.otherKey] = input.value;
+            persist();
+          });
+          box.appendChild(input);
+        }
+      }
+      slot.appendChild(box);
+    }
+
+    function renderRank(q, slot){
+      var picks = Array.isArray(state.answers[q.key]) ? state.answers[q.key] : [];
+      var box = document.createElement('div');
+      box.className = 'options';
+      var opts = orderedOptions(q);
+      opts.forEach(function(label){
+        var rank = picks.indexOf(label); // -1, 0, 1
+        var cls  = 'opt' + (rank === 0 ? ' rank-1' : rank === 1 ? ' rank-2' : '');
+        var mark = rank === 0 ? '#1' : rank === 1 ? '#2' : '';
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = cls;
+        btn.innerHTML = '<span>' + esc(label) + '</span>' +
+                        '<span class="mark">' + mark + '</span>';
+        btn.addEventListener('click', function(){
+          markStarted();
+          var cur = picks.slice();
+          var idx = cur.indexOf(label);
+          if (idx > -1)      cur.splice(idx, 1);        // toggle off
+          else if (cur.length < 2) cur.push(label);     // add to next slot
+          else               { cur.shift(); cur.push(label); } // replace #1, shift down
+          state.answers[q.key] = cur;
+          persist();
           render();
         });
         box.appendChild(btn);
@@ -916,6 +1062,7 @@
         var n = Number(input.value);
         out.textContent = n;
         state.answers[q.key] = n;
+        persist();
       });
       // Seed value so it lands in the answers even without change
       if (typeof state.answers[q.key] !== 'number') state.answers[q.key] = val;
@@ -947,6 +1094,7 @@
           state.price[k] = String(n);
           var out = slot.querySelector('[data-out="' + k + '"]');
           if (out) out.textContent = n.toFixed(2);
+          persist();
         });
       });
     }
@@ -960,46 +1108,95 @@
       ta.addEventListener('input', function(){
         markStarted();
         state.answers[q.key] = ta.value;
+        persist();
       });
       slot.appendChild(ta);
     }
 
     function renderFinal(q, slot){
       var email = state.answers.email || '';
+      var heard = state.answers.heard || '';
       var wrap = document.createElement('div');
       wrap.className = 'final-grid';
       wrap.innerHTML =
         '<div>' +
-          '<label class="final-label" for="final-email">Email — optional, for early access</label>' +
+          '<label class="final-label" for="final-email">Email — we\'ll send a $2-off code at launch</label>' +
           '<input type="email" id="final-email" class="email-input" placeholder="you@email.com" autocomplete="email" value="' + esc(email) + '" />' +
+        '</div>' +
+        '<div>' +
+          '<label class="final-label">How\'d you hear about us?</label>' +
+          '<div class="chip-row" id="heard-row"></div>' +
         '</div>';
       slot.appendChild(wrap);
 
       wrap.querySelector('#final-email').addEventListener('input', function(e){
         markStarted();
         state.answers.email = e.target.value;
+        persist();
+      });
+
+      var heardRow = wrap.querySelector('#heard-row');
+      HEARD_OPTIONS.forEach(function(label){
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip' + (heard === label ? ' selected' : '');
+        chip.textContent = label;
+        chip.addEventListener('click', function(){
+          markStarted();
+          state.answers.heard = state.answers.heard === label ? null : label;
+          persist();
+          render();
+        });
+        heardRow.appendChild(chip);
       });
     }
 
     function advance(){
       var q = QUESTIONS[state.step];
+      var err = document.getElementById('survey-error');
+      var setErr = function(msg){ if (err) err.textContent = msg || ''; };
+      setErr('');
 
       // Validate email format on the final step if provided
       if (q.type === 'final') {
         var em = (state.answers.email || '').trim();
         if (em && !/^\S+@\S+\.\S+$/.test(em)) {
-          var err = document.getElementById('survey-error');
-          if (err) err.textContent = "That email looks off — double-check it, or leave it blank.";
+          setErr("That email looks off — double-check it, or leave it blank.");
           return;
         }
       }
 
-      // Screener: "Never" on Q1 → polite exit
-      if (q.key === 'freq' && state.answers.freq === 'Never') {
-        state.phase = 'done';
-        state.exited = true;
-        render();
-        return;
+      // Screener: exit on "Never", tag "Rarely" as a low-fit respondent
+      if (q.key === 'freq') {
+        if (state.answers.freq === 'Never') {
+          state.phase = 'done';
+          state.exited = true;
+          clearPersist();
+          render();
+          return;
+        }
+        state.screener = state.answers.freq === 'Rarely' ? 'low-fit' : 'in-target';
+      }
+
+      // Rank Q: require two picks so we don't record garbage
+      if (q.type === 'rank') {
+        var picks = state.answers[q.key] || [];
+        if (picks.length < 2) { setErr('Pick your top 2 before moving on.'); return; }
+      }
+
+      // Price sanity: fair should be < too-expensive; nice-to-have: steal ≤ fair
+      if (q.type === 'price') {
+        var steal = Number(state.price.steal),
+            fair  = Number(state.price.deal),
+            top   = Number(state.price.toomuch);
+        if (fair >= top) {
+          setErr('"Too expensive" should be higher than "a fair price" — nudge the sliders.');
+          return;
+        }
+        if (steal > fair) {
+          setErr('"A steal" should be lower than "a fair price" — nudge the sliders.');
+          return;
+        }
       }
 
       if (state.step >= QUESTIONS.length - 1) {
@@ -1008,6 +1205,7 @@
       }
 
       state.step += 1;
+      persist();
       render();
     }
 
@@ -1015,16 +1213,25 @@
       var a = state.answers;
       var p = state.price;
       var out = {};
-      out['1. Candy frequency']           = a.freq || '';
-      out['2. Reads ingredient list']     = a.reads || '';
-      out['3. Matters most when picking'] = a.matters || '';
-      out['4. Ingredients avoided']       = Array.isArray(a.avoid)  ? a.avoid.join(', ')  : '';
-      out['5. Current brands']            = Array.isArray(a.brands) ? a.brands.join(', ') : '';
-      out['6. Appeal (0-10)']             = (typeof a.appeal === 'number') ? a.appeal : '';
-      out['7a. Price - fair ($)']         = p.deal    || '';
-      out['7b. Price - too expensive ($)']= p.toomuch || '';
-      out['8. Compromise story']          = a.story   || '';
-      if (a.email)   out['9. Email (waitlist)']       = a.email;
+      out['1. Candy frequency']            = a.freq || '';
+      out['2. Reads ingredient list']      = a.reads || '';
+      out['3a. Matters most - #1']         = Array.isArray(a.matters) ? (a.matters[0] || '') : '';
+      out['3b. Matters most - #2']         = Array.isArray(a.matters) ? (a.matters[1] || '') : '';
+      out['4. Ingredients avoided']        = Array.isArray(a.avoid)  ? a.avoid.join(', ')  : '';
+      if (a.avoid_other)  out['4b. Ingredients avoided - other'] = a.avoid_other;
+      out['5. Current brands']             = Array.isArray(a.brands) ? a.brands.join(', ') : '';
+      if (a.brands_other) out['5b. Current brands - other']      = a.brands_other;
+      out['6. Formats reached for']        = Array.isArray(a.format) ? a.format.join(', ') : '';
+      if (a.format_other) out['6b. Formats - other']             = a.format_other;
+      out['7. Appeal (0-10)']              = (typeof a.appeal === 'number') ? a.appeal : '';
+      out['8. Purchase intent']            = a.intent || '';
+      out['9a. Price - a steal ($)']       = p.steal   || '';
+      out['9b. Price - fair ($)']          = p.deal    || '';
+      out['9c. Price - too expensive ($)'] = p.toomuch || '';
+      out['10. Compromise story']          = a.story || '';
+      if (a.email) out['11a. Email (waitlist)'] = a.email;
+      if (a.heard) out['11b. How they heard']   = a.heard;
+      out['_screener']              = state.screener || '';
       out['_session_id']            = sessionId;
       out['_time_to_complete_sec']  = startedAt ? Math.round((Date.now() - startedAt) / 1000) : null;
       out['_submitted']             = new Date().toISOString();
@@ -1046,6 +1253,7 @@
         if (!r.ok) throw new Error('bad status');
         state.phase = 'done';
         state.exited = false;
+        clearPersist();
         render();
       })
       .catch(function(){

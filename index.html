@@ -538,16 +538,28 @@
   /* When a taste-test session is on, drop the rest of the site so
      nothing distracts the respondent and the nav can't scroll them
      back to the on-page 8-question survey. */
-  body.taste-mode { background: var(--paper); }
+  body.taste-mode,
+  body.taste-only-mode { background: var(--paper); }
   body.taste-mode header nav.primary,
   body.taste-mode #top,
   body.taste-mode #story,
   body.taste-mode #difference,
   body.taste-mode #survey,
   body.taste-mode #signup,
-  body.taste-mode footer .contact { display: none !important; }
-  body.taste-mode #taste-test { display: block; }
-  body.taste-mode footer { justify-content: center; }
+  body.taste-mode #taste-only,
+  body.taste-mode footer .contact,
+  body.taste-only-mode header nav.primary,
+  body.taste-only-mode #top,
+  body.taste-only-mode #story,
+  body.taste-only-mode #difference,
+  body.taste-only-mode #survey,
+  body.taste-only-mode #signup,
+  body.taste-only-mode #taste-test,
+  body.taste-only-mode footer .contact { display: none !important; }
+  body.taste-mode #taste-test,
+  body.taste-only-mode #taste-only { display: block; }
+  body.taste-mode footer,
+  body.taste-only-mode footer { justify-content: center; }
 
   .taste { padding: 40px 20px 56px; }
   .taste-shell { max-width: 640px; margin: 0 auto; }
@@ -935,6 +947,34 @@
         <div class="taste-nav" id="tsNav">
           <button class="taste-btn ghost" id="tsBack" type="button">Back</button>
           <button class="taste-btn primary" id="tsNext" type="button">Continue</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       POST-TASTE FOLLOW-UP (hidden by default; QR-only URL:
+       /?k=t8mr4pxv#taste-only). For people who already did the on-page
+       survey and are now trying a sample. Six questions, its own Basin
+       form so it stays clean of the other two datasets.
+       ================================================================ -->
+  <section id="taste-only" class="taste" hidden aria-labelledby="taste-only-h">
+    <div class="taste-shell">
+      <div class="taste-hd">
+        <span class="taste-eb"><span class="taste-eb-dot"></span>Post-taste · follow-up</span>
+        <h2 id="taste-only-h">You tried it. <em>tell us straight.</em></h2>
+        <p>Six quick questions about the piece you just tasted.</p>
+      </div>
+      <div class="taste-card">
+        <div class="taste-prog" id="toProg">
+          <span id="toStep">01 / 06</span>
+          <span class="taste-bar"><span id="toBar"></span></span>
+          <span id="toPct">17%</span>
+        </div>
+        <div id="toScreen" class="taste-screen" aria-live="polite"></div>
+        <div class="taste-nav" id="toNav">
+          <button class="taste-btn ghost" id="toBack" type="button">Back</button>
+          <button class="taste-btn primary" id="toNext" type="button">Continue</button>
         </div>
       </div>
     </div>
@@ -2105,6 +2145,322 @@
         data._last_key = id;
         var blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
         if (navigator.sendBeacon) navigator.sendBeacon(TASTE_ENDPOINT, blob);
+      } catch (_){}
+    }
+    window.addEventListener('pagehide', sendPartial);
+    document.addEventListener('visibilitychange', function(){
+      if (document.visibilityState === 'hidden') sendPartial();
+    });
+
+    render();
+  })();
+
+  /* ================================================================
+     Post-taste follow-up gate + survey.
+     Only runs when the URL carries the follow-up token from its QR:
+       https://straightupcandy.com/?k=t8mr4pxv#taste-only
+     Six taste-specific questions, own Basin form.
+     ================================================================ */
+  (function(){
+    var TOKEN = 't8mr4pxv';
+    var ENDPOINT = 'https://usebasin.com/f/dd9ca8e277a8';
+
+    var params = new URLSearchParams(location.search);
+    if (params.get('k') !== TOKEN) return;
+
+    var section = document.getElementById('taste-only');
+    if (!section) return;
+
+    document.body.classList.add('taste-only-mode');
+    section.hidden = false;
+    document.title = 'Post-taste follow-up · Straight Up Candy';
+    setTimeout(function(){ section.scrollIntoView({behavior: 'auto', block: 'start'}); }, 0);
+
+    function el(tag, attrs, children){
+      var n = document.createElement(tag);
+      attrs = attrs || {};
+      for (var k in attrs){
+        if (k === 'class') n.className = attrs[k];
+        else if (k === 'html') n.innerHTML = attrs[k];
+        else if (k.slice(0,2) === 'on') n.addEventListener(k.slice(2), attrs[k]);
+        else if (attrs[k] === true) n.setAttribute(k, '');
+        else if (attrs[k] != null && attrs[k] !== false) n.setAttribute(k, attrs[k]);
+      }
+      (children || []).forEach(function(c){
+        if (c == null) return;
+        n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+      });
+      return n;
+    }
+
+    var answers = {};
+    var stepIdx = 0;
+    var SURVEY_LEN = 6;
+
+    function radioList(key, options){
+      var wrap = el('div');
+      var ul = el('ul', {class: 'taste-choices'});
+      options.forEach(function(opt){
+        var id = 'to-' + key + '-' + opt.value;
+        var inp = el('input', {type: 'radio', name: 'to-' + key, id: id, value: opt.value});
+        var label = el('label', {class: 'taste-choice', for: id}, [
+          inp,
+          el('span', {class: 'taste-knob'}),
+          el('span', {class: 'taste-lbl'}, [opt.label])
+        ]);
+        if (answers[key] === opt.value){ inp.setAttribute('checked',''); label.classList.add('selected'); }
+        inp.addEventListener('change', function(){
+          answers[key] = opt.value;
+          ul.querySelectorAll('.taste-choice').forEach(function(c){ c.classList.remove('selected'); });
+          label.classList.add('selected');
+          updateNav();
+        });
+        ul.appendChild(el('li', {}, [label]));
+      });
+      wrap.appendChild(ul);
+      return wrap;
+    }
+
+    function slider0to10(key){
+      var val = answers[key] != null ? answers[key] : 5;
+      answers[key] = val;
+      var cur = el('span', {class: 'cur'}, [String(val)]);
+      var valEl = el('span', {class: 'val'}, [cur, ' / 10']);
+      var rng = el('input', {type: 'range', min: '0', max: '10', step: '1', value: String(val),
+        'aria-label': 'Appeal 0 to 10',
+        oninput: function(e){ answers[key] = +e.target.value; cur.textContent = String(answers[key]); }});
+      return el('div', {}, [
+        el('div', {class: 'taste-slider-row'}, [el('span', {}, ['Appeal']), valEl]),
+        rng,
+        el('div', {class: 'taste-scale'}, [el('span', {}, ['Not at all']), el('span', {}, ['Very'])])
+      ]);
+    }
+
+    function priceTri(key){
+      var state = answers[key] || {steal: 3, fair: 6, tooMuch: 10};
+      answers[key] = state;
+      var grid = el('div', {class: 'taste-price-grid'});
+      var errEl = el('div', {class: 'taste-price-err'}, ['Order needs to make sense: steal ≤ fair < too expensive.']);
+      var rows = [
+        {k: 'steal', name: 'A steal', sub: "You'd grab it without thinking"},
+        {k: 'fair', name: 'A fair price', sub: 'Feels right'},
+        {k: 'tooMuch', name: 'Too expensive', sub: "You'd put it back"}
+      ];
+      function valid(){ return state.steal <= state.fair && state.fair < state.tooMuch; }
+      function check(){
+        var ok = valid();
+        errEl.classList.toggle('show', !ok);
+        grid.querySelectorAll('.taste-price-row').forEach(function(r){ r.classList.toggle('err', !ok); });
+        answers._priceValid = ok;
+        updateNav();
+      }
+      rows.forEach(function(r){
+        var price = el('span', {class: 'val'}, ['$' + state[r.k].toFixed(2)]);
+        var rng = el('input', {type: 'range', min: '0', max: '20', step: '0.25', value: String(state[r.k]),
+          'aria-label': r.name + ' price',
+          oninput: function(e){ state[r.k] = +e.target.value; price.textContent = '$' + state[r.k].toFixed(2); check(); }});
+        grid.appendChild(el('div', {class: 'taste-price-row'}, [
+          el('div', {class: 'plabel'}, [
+            el('div', {}, [el('div', {class: 'name'}, [r.name]), el('div', {class: 'sub'}, [r.sub])]),
+            price
+          ]),
+          rng
+        ]));
+      });
+      check();
+      return el('div', {}, [grid, errEl]);
+    }
+
+    var STEPS = {
+      q1: {
+        canAdvance: function(){ return answers.appeal != null; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['01 · First taste']),
+            el('h2', {class: 'taste-q'}, ["How appealing is it now that you've tried it?"]),
+            slider0to10('appeal')
+          );
+        }
+      },
+      q2: {
+        canAdvance: function(){ return !!answers.stackup; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['02 · Head-to-head']),
+            el('h2', {class: 'taste-q'}, ['Compared to the candy you usually eat, how does it stack up?']),
+            radioList('stackup', [
+              {value: 'much_worse', label: 'Much worse'},
+              {value: 'worse', label: 'Worse'},
+              {value: 'same', label: 'About the same'},
+              {value: 'better', label: 'Better'},
+              {value: 'much_better', label: 'Much better'}
+            ])
+          );
+        }
+      },
+      q3: {
+        canAdvance: function(){ return !!answers.intent; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['03 · On the shelf']),
+            el('h2', {class: 'taste-q'}, ['If it were next to your usual candy at the same price, would you buy it?']),
+            radioList('intent', [
+              {value: 'definitely', label: 'Definitely'},
+              {value: 'probably', label: 'Probably'},
+              {value: 'once', label: 'Might try once'},
+              {value: 'probably_not', label: 'Probably not'},
+              {value: 'definitely_not', label: 'Definitely not'}
+            ])
+          );
+        }
+      },
+      q4: {
+        canAdvance: function(){ return !!answers._priceValid; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ["04 · What it's worth"]),
+            el('h2', {class: 'taste-q'}, ['What price feels right, now that you’ve tasted it?']),
+            el('p', {class: 'taste-hint'}, ['Imagine a standard-size package. Slide each one.']),
+            priceTri('price')
+          );
+        }
+      },
+      q5: {
+        canAdvance: function(){ return !!answers.story; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['05 · One more']),
+            el('h2', {class: 'taste-q'}, ['Anything about that piece that surprised you — good or bad?']),
+            el('div', {class: 'taste-choices', style: 'gap: 0'}, [
+              el('textarea', {class: 'taste-email', rows: '4',
+                placeholder: 'Say whatever comes to mind. One line is fine.',
+                style: 'font-family: inherit; resize: vertical; min-height: 96px;',
+                oninput: function(e){ answers.story = e.target.value; }}, [answers.story || ''])
+            ])
+          );
+        }
+      },
+      q6: {
+        canAdvance: function(){ return true; },
+        render: function(c){
+          c.replaceChildren(
+            el('span', {class: 'taste-num'}, ['06 · Want in early?']),
+            el('h2', {class: 'taste-q'}, ['Want early access + a launch discount?']),
+            el('p', {class: 'taste-hint'}, ['Optional — leave it blank if you’d rather not.']),
+            el('input', {type: 'email', class: 'taste-email', placeholder: 'you@email.com',
+              value: answers.final || '',
+              oninput: function(e){ answers.final = e.target.value; }})
+          );
+          document.getElementById('toNext').textContent = 'Submit';
+        }
+      },
+      thanks: {
+        canAdvance: function(){ return false; },
+        hideNav: true,
+        render: function(c){
+          var emailed = answers.final && answers.final.indexOf('@') !== -1;
+          c.replaceChildren(
+            el('div', {class: 'taste-msg'}, [
+              el('h3', {}, ['Thank you, ', el('em', {}, ['seriously.'])]),
+              el('p', {}, [emailed
+                ? "You're on the list. We'll send early access and a launch discount when the first lineup drops."
+                : "That feedback goes straight into the next round of the recipe."])
+            ])
+          );
+        }
+      }
+    };
+
+    var order = ['q1','q2','q3','q4','q5','q6','thanks'];
+
+    function updateNav(){
+      var step = STEPS[order[stepIdx]];
+      document.getElementById('toNext').disabled = !step.canAdvance();
+    }
+
+    function render(){
+      var id = order[stepIdx];
+      var step = STEPS[id];
+      var screen = document.getElementById('toScreen');
+      var nb = document.getElementById('toNext');
+      var bb = document.getElementById('toBack');
+      var nav = document.getElementById('toNav');
+      nb.textContent = 'Continue'; nb.classList.remove('big');
+      nav.style.display = 'flex';
+      step.render(screen);
+
+      var showProgress = id !== 'thanks';
+      var prog = document.getElementById('toProg');
+      prog.style.visibility = showProgress ? 'visible' : 'hidden';
+      if (showProgress){
+        var s = stepIdx + 1;
+        var pct = Math.round(s / SURVEY_LEN * 100);
+        document.getElementById('toStep').textContent = String(s).padStart(2,'0') + ' / ' + String(SURVEY_LEN).padStart(2,'0');
+        document.getElementById('toBar').style.width = pct + '%';
+        document.getElementById('toPct').textContent = pct + '%';
+      }
+      var atExit = id === 'thanks';
+      bb.disabled = stepIdx === 0 || atExit;
+      bb.style.visibility = (stepIdx === 0 || atExit) ? 'hidden' : 'visible';
+      if (step.hideNav) nav.style.display = 'none';
+      updateNav();
+    }
+
+    document.getElementById('toBack').addEventListener('click', function(){
+      if (stepIdx > 0){ stepIdx--; render(); }
+    });
+    document.getElementById('toNext').addEventListener('click', function(){
+      var step = STEPS[order[stepIdx]];
+      if (!step.canAdvance()) return;
+      if (order[stepIdx] === 'q6'){ submit(); }
+      if (stepIdx < order.length - 1){ stepIdx++; render(); }
+    });
+
+    function buildPayload(){
+      var p = answers.price || {};
+      return {
+        appeal:  answers.appeal != null ? String(answers.appeal) : '',
+        stackup: answers.stackup || '',
+        intent:  answers.intent || '',
+        price:   p.steal != null
+          ? 'steal $' + p.steal.toFixed(2) + ' · fair $' + p.fair.toFixed(2) + ' · too much $' + p.tooMuch.toFixed(2)
+          : '',
+        story:   answers.story || '',
+        final:   answers.final || '',
+        _source: 'post-taste-qr',
+        _submitted_at: new Date().toISOString()
+      };
+    }
+
+    function submit(){
+      var payload = buildPayload();
+      try {
+        fetch(ENDPOINT, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+          body: JSON.stringify(payload),
+          keepalive: true
+        });
+      } catch (_){
+        try {
+          var blob = new Blob([JSON.stringify(payload)], {type: 'application/json'});
+          if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, blob);
+        } catch (__){}
+      }
+    }
+
+    function sendPartial(){
+      var id = order[stepIdx];
+      if (id === 'thanks') return;
+      if (Object.keys(answers).length === 0) return;
+      try {
+        var data = buildPayload();
+        data._partial = true;
+        data._last_step = stepIdx + 1;
+        data._last_key = id;
+        var blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, blob);
       } catch (_){}
     }
     window.addEventListener('pagehide', sendPartial);

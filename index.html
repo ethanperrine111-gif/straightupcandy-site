@@ -256,12 +256,19 @@
   .compare .cell.left h3{ color: var(--ink-cap); }
   .compare .cell.right h3{ color: var(--accent); }
   .compare .items{ display: grid; gap: 14px; }
-  .compare .cell.left .items div{
-    font-size: 16px; color: var(--ink-soft);
+  .compare .items > div{ display: flex; gap: 10px; align-items: baseline; }
+  .compare .ci-bul{
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .compare .cell.left .items > div{ font-size: 16px; color: var(--ink-soft); }
+  .compare .cell.left .ci-txt{
     text-decoration: line-through;
     text-decoration-color: oklch(0.60 0.17 25 / 0.6);
   }
-  .compare .cell.right .items div{ font-size: 16px; font-weight: 600; }
+  .compare .cell.right .items > div{ font-size: 16px; font-weight: 600; }
 
   /* Survey */
   .survey{
@@ -830,7 +837,7 @@
         Candy,<br />
         <span class="italic">straight up</span>.
       </h1>
-      <p class="lede">Clean, whole-food-based candy for people who read the label.</p>
+      <p class="lede">Warning: made the boring way — out of actual food, no science experiments. Side effects may include reading the label and being fine with it.</p>
       <div class="hero-ctas">
         <a href="#signup" class="btn btn-primary">Get notified at launch</a>
         <a href="#survey" class="btn btn-ghost">Take the 2-min survey</a>
@@ -862,22 +869,13 @@
 
   <section id="story" class="story">
     <div>
-      <div class="kicker">01 · Why we started</div>
-      <h2>Candy shouldn't need a decoder ring.</h2>
+      <div class="kicker">01 · Why this exists</div>
+      <h2>Born from the lack of whole-food, transparent-ingredient candy.</h2>
     </div>
     <div class="col-right">
-      <p class="story-para">Most candy is built from a handful of industrial inputs dressed up with color and flavor. We flipped that: start with real, whole-food ingredients, and build the candy around them instead of the other way around.</p>
-      <p class="story-para">No corn syrup, no artificial dyes, no ingredients you need a chemistry degree to understand. Just candy, made straight up.</p>
-      <div class="checklist">
-        <div class="checklist-row">
-          <span class="check">✓</span>
-          <span class="label">Whole-food, recognizable ingredients</span>
-        </div>
-        <div class="checklist-row">
-          <span class="check">✓</span>
-          <span class="label">No artificial colors or flavors</span>
-        </div>
-      </div>
+      <p class="story-para">Born from almost burning down a house concentrating watermelon juice to make candy. The kitchen survived and the recipes got better.</p>
+      <p class="story-para">Most candy is lab-made ingredients with color and flavor painted on top. We start with real, whole-food ingredients and build the candy around them instead. No corn syrup, no artificial dyes, no ingredients you need a chemistry degree to understand.</p>
+      <p class="story-para">Just candy, made straight up.</p>
     </div>
   </section>
 
@@ -885,24 +883,24 @@
     <div class="inner">
       <div class="kicker">02 · The difference</div>
       <h2>What "straight up" actually means</h2>
-      <p class="deck">We're not vague about it. Here's exactly what's different.</p>
+      <p class="deck">We're not vague about it. Flip a bag over — you'll see the difference.</p>
       <div class="compare">
         <div class="cell left">
           <h3>Typical candy</h3>
           <div class="items">
-            <div>Processed sugar as the base</div>
-            <div>Artificial colors &amp; dyes</div>
-            <div>Long, unrecognizable ingredient lists</div>
-            <div>Flavor built in a lab</div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">Corn syrup or glucose syrup as the base</span></div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">Artificial dyes (Red 40, Yellow 5, Blue 1)</span></div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">"Artificial flavor" — built in a lab</span></div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">Modified corn starch, gums, thickeners</span></div>
           </div>
         </div>
         <div class="cell right">
           <h3>Straight Up Candy</h3>
           <div class="items">
-            <div>Whole-food ingredients, real sugar</div>
-            <div>Color from real fruit &amp; plants</div>
-            <div>Short, plain-English labels</div>
-            <div>Flavor from the ingredients themselves</div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">Honey, maple, dates, coconut sugar, or fruit</span></div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">Color from real fruit and vegetable juice</span></div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">Real fruit juice, purees, and natural extracts</span></div>
+            <div><span class="ci-bul">•</span><span class="ci-txt">Just gelatin or pectin. That's it.</span></div>
           </div>
         </div>
       </div>

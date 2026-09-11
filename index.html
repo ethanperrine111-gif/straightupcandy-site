@@ -209,6 +209,11 @@
     font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
   }
   .story .col-right{ padding-top: 34px; }
+  .story-sub{
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.35; margin: 18px 0 0; color: var(--ink-dim);
+    font-weight: 500; letter-spacing: -0.01em; text-wrap: balance;
+  }
   .story-para{ font-size: 19px; line-height: 1.62; margin: 0; color: var(--ink-dim); text-wrap: pretty; }
   .story-para + .story-para{ margin-top: 20px; }
   .checklist{
@@ -870,19 +875,19 @@
   <section id="story" class="story">
     <div>
       <div class="kicker">01 · Why this exists</div>
-      <h2>Born from the lack of whole-food, transparent-ingredient candy.</h2>
+      <h2>Our story</h2>
+      <p class="story-sub">Born from the lack of whole-food, transparent-ingredient candy.</p>
     </div>
     <div class="col-right">
       <p class="story-para">Born from almost burning down a house concentrating watermelon juice to make candy. The kitchen survived and the recipes got better.</p>
       <p class="story-para">Most candy is lab-made ingredients with color and flavor painted on top. We start with real, whole-food ingredients and build the candy around them instead. No corn syrup, no artificial dyes, no ingredients you need a chemistry degree to understand.</p>
-      <p class="story-para">Just candy, made straight up.</p>
     </div>
   </section>
 
   <section id="difference" class="difference">
     <div class="inner">
       <div class="kicker">02 · The difference</div>
-      <h2>What "straight up" actually means</h2>
+      <h2>What straight up means</h2>
       <p class="deck">We're not vague about it. Flip a bag over — you'll see the difference.</p>
       <div class="compare">
         <div class="cell left">
@@ -910,7 +915,6 @@
   <section id="survey" class="survey">
     <div class="survey-grid">
       <div class="survey-lede">
-        <div class="kicker">03 · Help us build it</div>
         <h2>Take our 2-minute survey</h2>
         <p>We're a new Utah candy company for people who love candy but care about what's in their food. Your answers shape the first lineup.</p>
         <div class="meta">8 questions · no account · anonymous</div>

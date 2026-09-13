@@ -535,10 +535,11 @@
     footer{
       padding-top: 28px; padding-bottom: 28px;
       flex-wrap: nowrap; justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
     }
-    footer .copyright{ font-size: 10px; letter-spacing: 0.04em; }
-    footer .contact{ font-size: 11px; letter-spacing: 0.02em; }
+    footer .copyright{ font-size: 10px; letter-spacing: 0.04em; white-space: nowrap; }
+    footer .copyright .cr-brand{ display: none; }
+    footer .contact{ font-size: 11px; letter-spacing: 0.02em; white-space: nowrap; }
     .q-title{ font-size: 22px; }
     .survey-body{ padding: 24px; gap: 18px; }
     .done{ padding: 40px 24px; }
@@ -1004,7 +1005,7 @@
   <a href="#top" class="wordmark" aria-label="Straight Up Candy">
     <span class="up">STRAIGHT UP</span><span class="candy">candy</span>
   </a>
-  <div class="copyright">© <span id="year"></span> Straight Up Candy</div>
+  <div class="copyright">© <span id="year"></span><span class="cr-brand"> Straight Up Candy</span></div>
   <a href="mailto:hello@straightupcandy.com" class="contact">hello@straightupcandy.com</a>
 </footer>
 

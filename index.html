@@ -532,9 +532,13 @@
       grid-template-columns: 1fr; gap: 28px; padding-top: 64px; padding-bottom: 64px;
       align-items: start;
     }
-    footer{ padding-top: 28px; padding-bottom: 28px; justify-content: center; text-align: center; gap: 14px; }
-    footer > *{ flex-basis: 100%; text-align: center; }
-    footer .copyright, footer .contact{ flex-basis: auto; }
+    footer{
+      padding-top: 28px; padding-bottom: 28px;
+      flex-wrap: nowrap; justify-content: space-between;
+      gap: 10px;
+    }
+    footer .copyright{ font-size: 10px; letter-spacing: 0.04em; }
+    footer .contact{ font-size: 11px; letter-spacing: 0.02em; }
     .q-title{ font-size: 22px; }
     .survey-body{ padding: 24px; gap: 18px; }
     .done{ padding: 40px 24px; }

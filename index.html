@@ -1635,7 +1635,7 @@
     // ---- State
     var answers = {};
     var stepIdx = 0;
-    var SURVEY_LEN = 12;
+    var SURVEY_LEN = 11;
 
     // ---- Renderers
     function radioList(key, options, opts){
@@ -1967,16 +1967,6 @@
           );
         }
       },
-      q10: {
-        canAdvance: function(){ return !!answers._priceValid; },
-        render: function(c){
-          c.replaceChildren(
-            el('h2', {class: 'taste-q'}, ['What price feels right, now that you’ve tasted it?']),
-            el('p', {class: 'taste-hint'}, ['Imagine a standard-size package. Slide each one.']),
-            priceTri('q10_price')
-          );
-        }
-      },
       q11: {
         canAdvance: function(){ return !!answers.q11_compromise; },
         render: function(c){
@@ -2031,7 +2021,7 @@
       }
     };
 
-    var order = ['q1','q2','q3','q4','q5','taste','q7','q8','q9','q10','q11','q12','thanks'];
+    var order = ['q1','q2','q3','q4','q5','taste','q7','q8','q9','q11','q12','thanks'];
 
     function updateNav(){
       var step = STEPS[order[stepIdx]];
@@ -2191,7 +2181,7 @@
 
     var answers = {};
     var stepIdx = 0;
-    var SURVEY_LEN = 6;
+    var SURVEY_LEN = 5;
 
     function radioList(key, options){
       var wrap = el('div');
@@ -2307,16 +2297,6 @@
           );
         }
       },
-      q4: {
-        canAdvance: function(){ return !!answers._priceValid; },
-        render: function(c){
-          c.replaceChildren(
-            el('h2', {class: 'taste-q'}, ['What price feels right, now that you’ve tasted it?']),
-            el('p', {class: 'taste-hint'}, ['Imagine a standard-size package. Slide each one.']),
-            priceTri('price')
-          );
-        }
-      },
       q5: {
         canAdvance: function(){ return !!answers.story; },
         render: function(c){
@@ -2361,7 +2341,7 @@
       }
     };
 
-    var order = ['q1','q2','q3','q4','q5','q6','thanks'];
+    var order = ['q1','q2','q3','q5','q6','thanks'];
 
     function updateNav(){
       var step = STEPS[order[stepIdx]];

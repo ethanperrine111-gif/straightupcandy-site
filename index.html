@@ -102,8 +102,9 @@
 
   /* Hero */
   .hero{
-    max-width: 1180px; margin: 0 auto; padding: 72px 32px 40px;
+    max-width: 1180px; margin: 0 auto; padding: 72px 32px 96px;
   }
+  .hero > div{ max-width: 820px; }
   .kicker{
     font-family: 'Space Mono', ui-monospace, Menlo, monospace;
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
@@ -451,7 +452,7 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
   }
   .signup h2{
-    font-size: clamp(36px, 4vw, 60px); line-height: 0.98; letter-spacing: -0.04em;
+    font-size: clamp(36px, 4vw, 60px); line-height: 1.04; letter-spacing: -0.02em;
     font-weight: 800; margin: 18px 0 0; text-transform: uppercase;
   }
   .signup .body{
@@ -843,7 +844,7 @@
         Candy,<br />
         <span class="italic">straight up</span>.
       </h1>
-      <p class="lede"><span class="lede-warn">Warning:</span> made the boring way — out of actual food, no science experiments. Side effects may include reading the label and being fine with it.</p>
+      <p class="lede"><span class="lede-warn">Warning:</span> Made the boring way — out of actual food, no science experiments. Side effects may include reading the label and being fine with it.</p>
       <div class="hero-ctas">
         <a href="#signup" class="btn btn-primary">Get notified at launch</a>
         <a href="#survey" class="btn btn-ghost">Take the 2-min survey</a>
@@ -986,7 +987,7 @@
           <input type="email" name="email_address" placeholder="you@email.com" required aria-label="Email address" autocomplete="email" />
           <button type="submit" id="notify-submit">Notify me</button>
         </form>
-        <p class="signup-note" id="signup-note">No spam, ever. Just one email when we launch.</p>
+        <p class="signup-note" id="signup-note"></p>
       </div>
     </div>
   </section>
@@ -997,7 +998,7 @@
   <a href="#top" class="wordmark" aria-label="Straight Up Candy">
     <span class="up">STRAIGHT UP</span><span class="candy">candy</span>
   </a>
-  <div class="copyright">© <span id="year"></span> Straight Up Candy · Clean-label candy, made straight up.</div>
+  <div class="copyright">© <span id="year"></span> Straight Up Candy</div>
   <a href="mailto:hello@straightupcandy.com" class="contact">hello@straightupcandy.com</a>
 </footer>
 
@@ -1029,7 +1030,7 @@
       btn.disabled = true;
       var oldLabel = btn.textContent;
       btn.textContent = 'Sending…';
-      setNote('No spam, ever. Just one email when we launch.', null);
+      setNote('', null);
 
       var fd = new FormData(form);
       fetch(form.action, {

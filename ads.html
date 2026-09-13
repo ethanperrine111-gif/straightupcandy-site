@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Straight Up Candy — Help us pick what to launch first</title>
-<meta name="description" content="A new Utah candy company launching in 2026. Vote on what we should make first and get 20% off launch day." />
+<title>Straight Up Candy — Gummies made the boring way</title>
+<meta name="description" content="A new Utah candy company launching in 2026. Real-food gummies, made the boring way. Pick a flavor, get 20% off launch day." />
 <meta name="robots" content="noindex, nofollow" />
-<meta property="og:title" content="Help us pick what to launch first — Straight Up Candy" />
-<meta property="og:description" content="Vote on what we should make first and get 20% off launch day." />
+<meta property="og:title" content="Gummies made the boring way — Straight Up Candy" />
+<meta property="og:description" content="Real-food gummies coming to Utah 2026. Pick a flavor, get 20% off launch day." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://straightupcandy.com/ads.html" />
 <meta property="og:image" content="https://straightupcandy.com/logo-512.png" />
@@ -134,82 +134,76 @@
     font-size: 15px; color: var(--ink-mid); margin: 0 0 24px;
   }
 
-  .cards{ display: grid; gap: 12px; }
-  .card{
+  /* Flavor grid — 2 cols on mobile, 3 cols above 560px */
+  .flavors{
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  }
+  @media (min-width: 560px){
+    .flavors{ grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  }
+  .flavor{
     position: relative;
-    display: block;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
     background: var(--paper-2);
     border: 1.5px solid var(--ink-line-2);
-    border-radius: 18px;
-    padding: 20px 20px 20px 20px;
+    border-radius: 16px;
+    padding: 18px 12px 16px;
     cursor: pointer;
     transition: border-color 0.15s ease, background 0.15s ease, transform 0.05s ease;
   }
-  .card:hover{ border-color: var(--ink-line-4); }
-  .card:active{ transform: translateY(1px); }
-  .card input{
-    position: absolute; opacity: 0; pointer-events: none;
-  }
-  .card.selected{
+  .flavor:hover{ border-color: var(--ink-line-4); }
+  .flavor:active{ transform: translateY(1px); }
+  .flavor input{ position: absolute; opacity: 0; pointer-events: none; }
+  .flavor.selected{
     border-color: var(--ink);
     background: oklch(0.22 0.02 60 / 0.03);
   }
-  .card-hd{
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 10px;
+  .flavor .emoji{
+    font-size: 34px; line-height: 1; margin-bottom: 8px;
   }
-  .card-icon{
-    width: 44px; height: 44px; border-radius: 12px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 26px; line-height: 1;
-    background: oklch(0.968 0.016 92); border: 1px solid var(--ink-line-2);
-    flex-shrink: 0;
+  .flavor h3{
+    font-size: 15px; line-height: 1.15; letter-spacing: -0.01em;
+    font-weight: 800; margin: 0 0 3px;
   }
-  .card h3{
-    font-size: 19px; line-height: 1.15; letter-spacing: -0.01em;
-    font-weight: 800; margin: 0;
-  }
-  .card .card-tag{
+  .flavor .tag{
     font-family: 'Space Mono', ui-monospace, Menlo, monospace;
-    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--ink-cap); margin-top: 2px;
+    font-size: 10px; letter-spacing: 0.06em;
+    color: var(--ink-cap);
   }
-  .card p{
-    font-size: 14.5px; line-height: 1.5; color: var(--ink-dim);
-    margin: 0 0 12px;
-  }
-  .card .no-list{
-    display: flex; flex-wrap: wrap; gap: 6px;
-    list-style: none; padding: 0; margin: 0;
-  }
-  .card .no-list li{
-    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
-    font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--ink-mid);
-    padding: 5px 9px; border: 1px solid var(--ink-line-2); border-radius: 6px;
-    background: var(--paper);
-  }
-  .card .no-list li::before{
-    content: "no "; color: var(--accent); font-weight: 700;
-  }
-  .card .check{
-    position: absolute; top: 18px; right: 18px;
-    width: 22px; height: 22px; border-radius: 999px;
+  .flavor .check{
+    position: absolute; top: 10px; right: 10px;
+    width: 18px; height: 18px; border-radius: 999px;
     border: 1.5px solid var(--ink-line-3);
     display: inline-flex; align-items: center; justify-content: center;
     background: var(--paper-2);
     transition: background 0.15s ease, border-color 0.15s ease;
   }
-  .card.selected .check{
+  .flavor.selected .check{
     background: var(--ink); border-color: var(--ink);
   }
-  .card .check::after{
-    content: ""; width: 6px; height: 10px;
+  .flavor .check::after{
+    content: ""; width: 5px; height: 8px;
     border-right: 2px solid var(--paper); border-bottom: 2px solid var(--paper);
     transform: rotate(45deg) translate(-1px, -1px);
     opacity: 0; transition: opacity 0.15s ease;
   }
-  .card.selected .check::after{ opacity: 1; }
+  .flavor.selected .check::after{ opacity: 1; }
+
+  /* No-junk chips row under the flavor grid */
+  .no-list{
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    list-style: none; padding: 0; margin: 20px 0 0;
+  }
+  .no-list li{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-mid);
+    padding: 5px 10px; border: 1px solid var(--ink-line-2); border-radius: 6px;
+    background: var(--paper);
+  }
+  .no-list li::before{
+    content: "no "; color: var(--accent); font-weight: 700;
+  }
 
   /* Email capture */
   .signup{
@@ -377,17 +371,13 @@
   Ads landing page — dedicated smoke-test destination for paid traffic.
   Not linked from the main site; noindex/nofollow.
 
-  Flow: user lands from an ad, votes for one of three concepts,
+  Pitch: real-food gummies, coming to Utah 2026.
+  Flow: user lands from an ad, picks a flavor they'd want first,
         enters email, submits. Data goes to Basin.
 
-  TODO before running ads:
-    1. Create a NEW form at https://usebasin.com/ (call it "SUC — Ads landing")
-    2. Copy the form endpoint URL and paste it into ADS_ENDPOINT below.
-       (Do NOT reuse the survey or taste-test endpoints — you'll want
-        the vote data separated for analysis.)
-    3. In the ad URL, append UTM params like:
-       ?utm_source=meta&utm_medium=cpc&utm_campaign=smoke-v1&utm_content=concept-A
-       These are captured automatically and stored with each submission.
+  Ad URL format:
+    https://straightupcandy.com/ads.html?utm_source=meta&utm_medium=cpc&utm_campaign=smoke-v1&utm_content=creative-A
+  UTMs are captured automatically and stored with each submission.
 -->
 
 <div class="strip">
@@ -401,75 +391,73 @@
 
   <section class="hero">
     <div class="hero-pill"><span class="dot"></span>Coming soon to Utah</div>
-    <h1>Help us pick <span class="em">what to make first.</span></h1>
-    <p class="lede">We're a new Utah candy company for people who love candy but care about what's in their food. <strong>You choose which one we launch first</strong> — and get 20% off launch day.</p>
+    <h1>Gummy candy, <span class="em">made the boring way.</span></h1>
+    <p class="lede">We're a new Utah candy company making <strong>gummies from actual food</strong> — no dyes, no HFCS, no science experiments. Pick a flavor and get 20% off launch day.</p>
   </section>
 
   <section class="vote">
-    <div class="vote-eb"><span class="num">1</span>Pick one</div>
-    <h2>Which should we make first?</h2>
-    <p class="sub">Tap the one you'd actually buy. This is a real vote — the winner ships first.</p>
+    <div class="vote-eb"><span class="num">1</span>Pick a flavor</div>
+    <h2>Which flavor should we make first?</h2>
+    <p class="sub">Tap the one you'd actually eat. Real vote — the winner ships first.</p>
 
-    <div class="cards" id="cards">
+    <div class="flavors" id="flavors">
 
-      <label class="card" data-concept="gummies">
-        <input type="radio" name="concept" value="gummies" />
+      <label class="flavor" data-flavor="strawberry">
+        <input type="radio" name="flavor" value="strawberry" />
         <div class="check" aria-hidden="true"></div>
-        <div class="card-hd">
-          <span class="card-icon">🍬</span>
-          <div>
-            <h3>Real-fruit gummies</h3>
-            <div class="card-tag">Concept A · Chewy</div>
-          </div>
-        </div>
-        <p>Gummy bears made from actual fruit purée. Chewy, tart, the kind you can hand your kid without an inner monologue.</p>
-        <ul class="no-list">
-          <li>dyes</li>
-          <li>HFCS</li>
-          <li>artificial flavors</li>
-          <li>seed oils</li>
-        </ul>
+        <div class="emoji">🍓</div>
+        <h3>Strawberry</h3>
+        <div class="tag">The classic</div>
       </label>
 
-      <label class="card" data-concept="chocolate">
-        <input type="radio" name="concept" value="chocolate" />
+      <label class="flavor" data-flavor="mixed-berry">
+        <input type="radio" name="flavor" value="mixed-berry" />
         <div class="check" aria-hidden="true"></div>
-        <div class="card-hd">
-          <span class="card-icon">🍫</span>
-          <div>
-            <h3>5-ingredient chocolate</h3>
-            <div class="card-tag">Concept B · Melty</div>
-          </div>
-        </div>
-        <p>Chocolate bites with five ingredients. All food. All pronounceable. The kind of thing you eat one of and feel fine about it.</p>
-        <ul class="no-list">
-          <li>seed oils</li>
-          <li>sugar alcohols</li>
-          <li>emulsifier gunk</li>
-          <li>fillers</li>
-        </ul>
+        <div class="emoji">🫐</div>
+        <h3>Mixed berry</h3>
+        <div class="tag">Safe bet</div>
       </label>
 
-      <label class="card" data-concept="hardcandy">
-        <input type="radio" name="concept" value="hardcandy" />
+      <label class="flavor" data-flavor="peach">
+        <input type="radio" name="flavor" value="peach" />
         <div class="check" aria-hidden="true"></div>
-        <div class="card-hd">
-          <span class="card-icon">🍭</span>
-          <div>
-            <h3>Dentist-approved hard candy</h3>
-            <div class="card-tag">Concept C · Lasting</div>
-          </div>
-        </div>
-        <p>Lollipops and hard candy sweetened with real fruit — low-glycemic, tooth-friendly, still actually candy. Not "wellness candy" that tastes like a supplement.</p>
-        <ul class="no-list">
-          <li>artificial sweeteners</li>
-          <li>dyes</li>
-          <li>HFCS</li>
-          <li>weird aftertaste</li>
-        </ul>
+        <div class="emoji">🍑</div>
+        <h3>Peach</h3>
+        <div class="tag">Nostalgic</div>
+      </label>
+
+      <label class="flavor" data-flavor="mango">
+        <input type="radio" name="flavor" value="mango" />
+        <div class="check" aria-hidden="true"></div>
+        <div class="emoji">🥭</div>
+        <h3>Mango</h3>
+        <div class="tag">Grown-up</div>
+      </label>
+
+      <label class="flavor" data-flavor="sour">
+        <input type="radio" name="flavor" value="sour" />
+        <div class="check" aria-hidden="true"></div>
+        <div class="emoji">🍋</div>
+        <h3>Sour</h3>
+        <div class="tag">Pucker up</div>
+      </label>
+
+      <label class="flavor" data-flavor="surprise">
+        <input type="radio" name="flavor" value="surprise" />
+        <div class="check" aria-hidden="true"></div>
+        <div class="emoji">✨</div>
+        <h3>Surprise me</h3>
+        <div class="tag">Any of them</div>
       </label>
 
     </div>
+
+    <ul class="no-list" aria-label="What's not in it">
+      <li>dyes</li>
+      <li>HFCS</li>
+      <li>artificial flavors</li>
+      <li>seed oils</li>
+    </ul>
   </section>
 
   <section class="signup">
@@ -481,7 +469,8 @@
       <p class="promise"><span class="discount">20% OFF</span>Launch day, all yours.</p>
       <p>You'll be the first to know when it's ready and the first to order.</p>
       <form class="signup-form" id="ads-form" novalidate>
-        <input type="hidden" name="concept" id="hidden-concept" value="" />
+        <input type="hidden" name="flavor" id="hidden-flavor" value="" />
+        <input type="hidden" name="product" value="gummies" />
         <input type="hidden" name="utm_source" id="utm-source" value="" />
         <input type="hidden" name="utm_medium" id="utm-medium" value="" />
         <input type="hidden" name="utm_campaign" id="utm-campaign" value="" />
@@ -509,10 +498,10 @@
   <section class="thanks">
     <div class="hero-pill"><span class="dot"></span>You're in</div>
     <h1 class="big">See you at <span class="em">launch.</span></h1>
-    <p>We've got your email and your vote. When we ship the first one, you'll be first in line — with 20% off.</p>
+    <p>We've got your email and your flavor pick. When we ship the first batch, you'll be first in line — with 20% off.</p>
     <div class="picked">You picked: <strong id="picked-name">—</strong></div>
     <div>
-      <span class="go-back" id="reset-link">← Change your vote</span>
+      <span class="go-back" id="reset-link">← Change your flavor</span>
     </div>
   </section>
 </template>
@@ -534,10 +523,13 @@
   var ADS_ENDPOINT = 'https://usebasin.com/f/571b3946a404';
 
   // Human-friendly names for the thank-you screen.
-  var CONCEPT_NAMES = {
-    gummies:    'Real-fruit gummies',
-    chocolate:  '5-ingredient chocolate',
-    hardcandy:  'Dentist-approved hard candy'
+  var FLAVOR_NAMES = {
+    'strawberry':   'Strawberry',
+    'mixed-berry':  'Mixed berry',
+    'peach':        'Peach',
+    'mango':        'Mango',
+    'sour':         'Sour',
+    'surprise':     'Whatever we make first'
   };
 
   // ------------------------------------------------------------------
@@ -565,17 +557,17 @@
   })();
 
   // ------------------------------------------------------------------
-  // Vote-card selection
-  var cards = document.querySelectorAll('.card');
-  var hiddenConcept = document.getElementById('hidden-concept');
+  // Flavor selection
+  var flavorEls = document.querySelectorAll('.flavor');
+  var hiddenFlavor = document.getElementById('hidden-flavor');
 
-  cards.forEach(function(card){
-    card.addEventListener('click', function(){
-      cards.forEach(function(c){ c.classList.remove('selected'); });
-      card.classList.add('selected');
-      var input = card.querySelector('input');
+  flavorEls.forEach(function(el){
+    el.addEventListener('click', function(){
+      flavorEls.forEach(function(f){ f.classList.remove('selected'); });
+      el.classList.add('selected');
+      var input = el.querySelector('input');
       if (input) input.checked = true;
-      hiddenConcept.value = card.getAttribute('data-concept') || '';
+      hiddenFlavor.value = el.getAttribute('data-flavor') || '';
     });
   });
 
@@ -590,11 +582,11 @@
     note.textContent = '';
     note.classList.remove('err');
 
-    var concept = hiddenConcept.value;
+    var flavor = hiddenFlavor.value;
     var email = (form.email.value || '').trim();
 
-    if (!concept){
-      note.textContent = 'Pick one of the three first.';
+    if (!flavor){
+      note.textContent = 'Pick a flavor first.';
       note.classList.add('err');
       document.querySelector('.vote').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
@@ -621,7 +613,7 @@
     })
     .then(function(res){
       if (!res.ok) throw new Error('bad status ' + res.status);
-      showThanks(concept, email);
+      showThanks(flavor, email);
     })
     .catch(function(err){
       console.error('ads submit failed', err);
@@ -632,14 +624,14 @@
     });
   });
 
-  function showThanks(concept, email){
+  function showThanks(flavor, email){
     var stage = document.getElementById('stage');
     var tpl = document.getElementById('thanks-tpl');
     if (!stage || !tpl) return;
 
     var frag = tpl.content.cloneNode(true);
     var pickedEl = frag.getElementById('picked-name');
-    if (pickedEl) pickedEl.textContent = CONCEPT_NAMES[concept] || concept;
+    if (pickedEl) pickedEl.textContent = FLAVOR_NAMES[flavor] || flavor;
 
     stage.innerHTML = '';
     stage.appendChild(frag);
@@ -649,14 +641,10 @@
     if (reset) reset.addEventListener('click', function(){ location.reload(); });
 
     // Fire a lightweight conversion event so ad platforms can attribute it.
-    // If you install the Meta Pixel, replace the console line below with:
-    //   if (window.fbq) fbq('track', 'Lead', { content_name: concept });
-    // If you use GA4, add:
-    //   if (window.gtag) gtag('event', 'lead', { concept: concept });
     try {
-      console.log('[ads] converted', { concept: concept, email_domain: email.split('@')[1] });
-      if (window.fbq) window.fbq('track', 'Lead', { content_name: concept });
-      if (window.gtag) window.gtag('event', 'lead', { concept: concept });
+      console.log('[ads] converted', { flavor: flavor, email_domain: email.split('@')[1] });
+      if (window.fbq) window.fbq('track', 'Lead', { content_name: 'gummies', content_category: flavor });
+      if (window.gtag) window.gtag('event', 'lead', { flavor: flavor });
     } catch(_) {}
   }
 </script>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -103,7 +103,6 @@
   /* Hero */
   .hero{
     max-width: 1180px; margin: 0 auto; padding: 72px 32px 40px;
-    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: end;
   }
   .kicker{
     font-family: 'Space Mono', ui-monospace, Menlo, monospace;
@@ -622,7 +621,6 @@
     border-radius: 2px; transition: width 240ms ease; width: 8%;
   }
   .taste-screen { color: var(--ink); }
-  .taste-num {
     display: inline-block; font-size: 11px; font-weight: 700;
     letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--accent); margin-bottom: 10px;
@@ -851,11 +849,6 @@
         <a href="#survey" class="btn btn-ghost">Take the 2-min survey</a>
       </div>
     </div>
-    <aside class="promise-card">
-      <div class="promise-head"><span>The promise</span><span>Straight up</span></div>
-      <p class="promise-body">Real ingredients. Short labels. Candy that tastes like what it's made from.</p>
-      <p class="promise-foot">First lineup in development</p>
-    </aside>
   </section>
 
   <div class="ticker" aria-hidden="true">
@@ -878,7 +871,7 @@
   <section id="story" class="story">
     <div>
       <h2>Our story</h2>
-      <p class="story-sub">Born from the lack of transparent whole-food ingredient candy.</p>
+      <p class="story-sub">Born from the lack of transparent whole food ingredient candy.</p>
     </div>
     <div class="col-right">
       <p class="story-para">Born from almost burning down a house concentrating watermelon juice to make candy. The kitchen survived and the recipes got better.</p>
@@ -1863,7 +1856,6 @@
         onNext: function(){ if (answers.q1_frequency === 'never') jumpTo('screener'); },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['01 · A few quick ones first']),
             el('h2', {class: 'taste-q'}, ['How often do you eat candy?']),
             radioList('q1_frequency', [
               {value: 'daily', label: 'Daily'},
@@ -1879,7 +1871,6 @@
         canAdvance: function(){ return !!answers.q2_reads_labels; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['02 · Labels']),
             el('h2', {class: 'taste-q'}, ['Do you ever read the ingredient list when you buy candy?']),
             el('p', {class: 'taste-hint'}, ['Be honest — no wrong answer.']),
             radioList('q2_reads_labels', [
@@ -1895,7 +1886,6 @@
         canAdvance: function(){ return (answers.q3_top2 || []).length === 2; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['03 · What matters']),
             el('h2', {class: 'taste-q'}, ['When picking a candy, what matters most?']),
             el('p', {class: 'taste-hint'}, ['Tap your #1 first, then your #2.']),
             ranked2('q3_top2', Q3_OPTS)
@@ -1906,7 +1896,6 @@
         canAdvance: function(){ return (answers.q4_avoid || []).length > 0; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['04 · The avoid list']),
             el('h2', {class: 'taste-q'}, ['What ingredients do you try to avoid in candy?']),
             el('p', {class: 'taste-hint'}, ['Select all that apply.']),
             checkboxList('q4_avoid', Q4_OPTS, {other: true, exclusive: 'none'})
@@ -1917,7 +1906,6 @@
         canAdvance: function(){ return (answers.q5_brands || []).length > 0; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['05 · The competition']),
             el('h2', {class: 'taste-q'}, ['When you buy "better-for-you" candy today, which brands do you reach for?']),
             el('p', {class: 'taste-hint'}, ['This helps us know where we fit.']),
             checkboxList('q5_brands', Q5_OPTS, {other: true, exclusive: 'none', shuffleOpts: true})
@@ -1929,7 +1917,6 @@
         render: function(c){
           c.replaceChildren(
             el('div', {class: 'taste-break'}, [
-              el('span', {class: 'taste-num'}, ['06 · Try it now']),
               el('div', {class: 'taste-piece', role: 'presentation'}),
               el('h3', {}, ["You're up.", el('em', {}, ['have a piece.'])]),
               el('p', {}, ['Grab a piece of Straight Up Candy and give it a real taste. The next questions are about what you just tried.'])
@@ -1944,7 +1931,6 @@
         canAdvance: function(){ return answers.q7_appeal != null; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['07 · First taste']),
             el('h2', {class: 'taste-q'}, ["How appealing is it now that you've tried it?"]),
             slider0to10('q7_appeal')
           );
@@ -1954,7 +1940,6 @@
         canAdvance: function(){ return !!answers.q8_stackup; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['08 · Head-to-head']),
             el('h2', {class: 'taste-q'}, ['Compared to the candy you usually eat, how does it stack up?']),
             radioList('q8_stackup', [
               {value: 'much_worse', label: 'Much worse'},
@@ -1970,7 +1955,6 @@
         canAdvance: function(){ return !!answers.q9_buy; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['09 · On the shelf']),
             el('h2', {class: 'taste-q'}, ['If it were next to your usual candy at the same price, would you buy it?']),
             radioList('q9_buy', [
               {value: 'definitely', label: 'Definitely'},
@@ -1986,7 +1970,6 @@
         canAdvance: function(){ return !!answers._priceValid; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ["10 · What it's worth"]),
             el('h2', {class: 'taste-q'}, ['What price feels right, now that you’ve tasted it?']),
             el('p', {class: 'taste-hint'}, ['Imagine a standard-size package. Slide each one.']),
             priceTri('q10_price')
@@ -1997,7 +1980,6 @@
         canAdvance: function(){ return !!answers.q11_compromise; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['11 · The catch']),
             el('h2', {class: 'taste-q'}, ['Ever bought candy and felt like you had to compromise on ingredients?']),
             radioList('q11_compromise', [
               {value: 'yes', label: 'Yes, sometimes'},
@@ -2010,7 +1992,6 @@
         canAdvance: function(){ return true; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['12 · Want in early?']),
             el('h2', {class: 'taste-q'}, ['Want early access + a launch discount?']),
             el('p', {class: 'taste-hint'}, ["Optional — leave it blank if you'd rather not."]),
             el('input', {type: 'email', class: 'taste-email', placeholder: 'you@email.com',
@@ -2290,7 +2271,6 @@
         canAdvance: function(){ return answers.appeal != null; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['01 · First taste']),
             el('h2', {class: 'taste-q'}, ["How appealing is it now that you've tried it?"]),
             slider0to10('appeal')
           );
@@ -2300,7 +2280,6 @@
         canAdvance: function(){ return !!answers.stackup; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['02 · Head-to-head']),
             el('h2', {class: 'taste-q'}, ['Compared to the candy you usually eat, how does it stack up?']),
             radioList('stackup', [
               {value: 'much_worse', label: 'Much worse'},
@@ -2316,7 +2295,6 @@
         canAdvance: function(){ return !!answers.intent; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['03 · On the shelf']),
             el('h2', {class: 'taste-q'}, ['If it were next to your usual candy at the same price, would you buy it?']),
             radioList('intent', [
               {value: 'definitely', label: 'Definitely'},
@@ -2332,7 +2310,6 @@
         canAdvance: function(){ return !!answers._priceValid; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ["04 · What it's worth"]),
             el('h2', {class: 'taste-q'}, ['What price feels right, now that you’ve tasted it?']),
             el('p', {class: 'taste-hint'}, ['Imagine a standard-size package. Slide each one.']),
             priceTri('price')
@@ -2343,7 +2320,6 @@
         canAdvance: function(){ return !!answers.story; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['05 · One more']),
             el('h2', {class: 'taste-q'}, ['Anything about that piece that surprised you — good or bad?']),
             el('div', {class: 'taste-choices', style: 'gap: 0'}, [
               el('textarea', {class: 'taste-email', rows: '4',
@@ -2358,7 +2334,6 @@
         canAdvance: function(){ return true; },
         render: function(c){
           c.replaceChildren(
-            el('span', {class: 'taste-num'}, ['06 · Want in early?']),
             el('h2', {class: 'taste-q'}, ['Want early access + a launch discount?']),
             el('p', {class: 'taste-hint'}, ['Optional — leave it blank if you’d rather not.']),
             el('input', {type: 'email', class: 'taste-email', placeholder: 'you@email.com',

@@ -1068,9 +1068,8 @@
         title: 'Do you ever read the ingredient list when you buy candy?',
         hint: 'Be honest — no wrong answer.',
         options: ['Always', 'Sometimes', 'Rarely', 'Never'] },
-      { key: 'matters', type: 'rank', kind: 'Pick your top 2',
-        title: 'When picking a candy, what matters most to you? (Pick two)',
-        hint: 'Tap your #1 first, then your #2.',
+      { key: 'matters', type: 'single', kind: 'Single choice',
+        title: 'When picking a candy, what matters most to you?',
         options: ['Taste', 'Clean ingredients', 'Price', 'Brand values', 'Familiar brand', 'Trying something new'],
         shuffle: true },
       { key: 'avoid', type: 'multi', kind: 'Select all',
@@ -1090,9 +1089,6 @@
       { key: 'intent', type: 'single', kind: 'Single choice',
         title: 'If it were on the shelf next to your usual candy at the same price, would you buy it?',
         options: ['Definitely', 'Probably', 'Might try once', 'Probably not', 'Definitely not'] },
-      { key: 'price', type: 'price', kind: 'Three sliders',
-        title: 'What price feels right?',
-        hint: 'Imagine a standard-size package. Slide each one.' },
       { key: 'story', type: 'single', kind: 'Yes or no',
         title: 'Ever bought candy and felt like you had to compromise on ingredients?',
         options: ['Yes', 'No'] },
@@ -1533,19 +1529,15 @@
       var out = {};
       out['1. Candy frequency']            = a.freq || '';
       out['2. Reads ingredient list']      = a.reads || '';
-      out['3a. Matters most - #1']         = Array.isArray(a.matters) ? (a.matters[0] || '') : '';
-      out['3b. Matters most - #2']         = Array.isArray(a.matters) ? (a.matters[1] || '') : '';
+      out['3. Matters most']               = a.matters || '';
       out['4. Ingredients avoided']        = Array.isArray(a.avoid)  ? a.avoid.join(', ')  : '';
       if (a.avoid_other)  out['4b. Ingredients avoided - other'] = a.avoid_other;
       out['5. Current brands']             = Array.isArray(a.brands) ? a.brands.join(', ') : '';
       if (a.brands_other) out['5b. Current brands - other']      = a.brands_other;
       out['6. Appeal (0-10)']              = (typeof a.appeal === 'number') ? a.appeal : '';
       out['7. Purchase intent']            = a.intent || '';
-      out['8a. Price - a steal ($)']       = p.steal   || '';
-      out['8b. Price - fair ($)']          = p.deal    || '';
-      out['8c. Price - too expensive ($)'] = p.toomuch || '';
-      out['9. Ingredient compromise']      = a.story || '';
-      if (a.email) out['10. Email (waitlist)'] = a.email;
+      out['8. Ingredient compromise']      = a.story || '';
+      if (a.email) out['9. Email (waitlist)'] = a.email;
       out['_screener']              = state.screener || '';
       out['_session_id']            = sessionId;
       out['_time_to_complete_sec']  = startedAt ? Math.round((Date.now() - startedAt) / 1000) : null;

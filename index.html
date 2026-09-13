@@ -1885,12 +1885,11 @@
         }
       },
       q3: {
-        canAdvance: function(){ return (answers.q3_top2 || []).length === 2; },
+        canAdvance: function(){ return !!answers.q3_top; },
         render: function(c){
           c.replaceChildren(
             el('h2', {class: 'taste-q'}, ['When picking a candy, what matters most?']),
-            el('p', {class: 'taste-hint'}, ['Tap your #1 first, then your #2.']),
-            ranked2('q3_top2', Q3_OPTS)
+            radioList('q3_top', Q3_OPTS)
           );
         }
       },
@@ -2097,7 +2096,7 @@
       return {
         freq:    answers.q1_frequency || '',
         reads:   answers.q2_reads_labels || '',
-        matters: (answers.q3_top2 || []).join(', '),
+        matters: answers.q3_top || '',
         avoid:   avoidList.join(', '),
         brands:  brandList.join(', '),
         appeal:  answers.q7_appeal != null ? String(answers.q7_appeal) : '',

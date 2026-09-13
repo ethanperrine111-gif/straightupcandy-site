@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Straight Up Candy — Help us pick what to launch first</title>
+<meta name="description" content="A new Utah candy company launching in 2026. Vote on what we should make first and get 20% off launch day." />
+<meta name="robots" content="noindex, nofollow" />
+<meta property="og:title" content="Help us pick what to launch first — Straight Up Candy" />
+<meta property="og:description" content="Vote on what we should make first and get 20% off launch day." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://straightupcandy.com/ads.html" />
+<meta property="og:image" content="https://straightupcandy.com/logo-512.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://straightupcandy.com/logo-512.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="logo-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="logo-192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="logo-180.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper: oklch(0.968 0.016 92);
+    --paper-2: oklch(0.99 0.008 92);
+    --paper-dim: oklch(0.82 0.015 92);
+    --paper-mute: oklch(0.72 0.015 92);
+    --ink: oklch(0.22 0.02 60);
+    --ink-dim: oklch(0.30 0.02 60);
+    --ink-mid: oklch(0.36 0.02 60);
+    --ink-soft: oklch(0.48 0.02 60);
+    --ink-cap: oklch(0.50 0.02 60);
+    --ink-line: oklch(0.22 0.02 60 / 0.14);
+    --ink-line-2: oklch(0.22 0.02 60 / 0.2);
+    --ink-line-3: oklch(0.22 0.02 60 / 0.28);
+    --ink-line-4: oklch(0.22 0.02 60 / 0.35);
+    --accent: oklch(0.60 0.17 25);
+    --success: oklch(0.55 0.13 145);
+    --error: oklch(0.60 0.20 25);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin: 0; padding: 0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Archivo, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a{ color: var(--ink); text-decoration: none; }
+  input, textarea, button{ font-family: inherit; color: inherit; }
+  ::selection{ background: var(--accent); color: var(--paper); }
+
+  /* Wordmark */
+  .wordmark{ display: inline-flex; align-items: baseline; gap: 8px; }
+  .wordmark .up{ font-weight: 800; letter-spacing: -0.03em; font-size: 19px; }
+  .wordmark .candy{
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; color: var(--accent); font-size: 19px;
+  }
+
+  /* Top strip */
+  .strip{
+    padding: 18px 28px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    border-bottom: 1px solid var(--ink-line);
+  }
+  .strip .kick{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-cap);
+  }
+  @media (max-width: 560px){
+    .strip .kick{ display: none; }
+  }
+
+  /* Hero */
+  .hero{
+    max-width: 720px; margin: 0 auto;
+    padding: 56px 28px 24px;
+  }
+  .hero-pill{
+    display: inline-flex; align-items: center; gap: 9px;
+    border: 1px solid var(--ink-line-3); border-radius: 999px;
+    padding: 6px 13px;
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .hero-pill .dot{
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+  .hero h1{
+    font-size: clamp(44px, 8vw, 72px); line-height: 1.02; letter-spacing: -0.03em;
+    font-weight: 800; margin: 22px 0 18px;
+    text-wrap: balance;
+  }
+  .hero h1 .em{
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400; color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .hero .lede{
+    font-size: 18px; line-height: 1.5; color: var(--ink-dim);
+    max-width: 560px; margin: 0;
+  }
+  .hero .lede strong{ color: var(--ink); font-weight: 700; }
+
+  /* Vote section */
+  .vote{
+    max-width: 720px; margin: 0 auto;
+    padding: 40px 28px 8px;
+  }
+  .vote-eb{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-cap); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .vote-eb .num{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 999px;
+    background: var(--ink); color: var(--paper);
+    font-family: Archivo, sans-serif; font-weight: 700; font-size: 12px;
+    letter-spacing: 0;
+  }
+  .vote h2{
+    font-size: clamp(28px, 5vw, 36px); line-height: 1.1; letter-spacing: -0.02em;
+    font-weight: 800; margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .vote .sub{
+    font-size: 15px; color: var(--ink-mid); margin: 0 0 24px;
+  }
+
+  .cards{ display: grid; gap: 12px; }
+  .card{
+    position: relative;
+    display: block;
+    background: var(--paper-2);
+    border: 1.5px solid var(--ink-line-2);
+    border-radius: 18px;
+    padding: 20px 20px 20px 20px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.05s ease;
+  }
+  .card:hover{ border-color: var(--ink-line-4); }
+  .card:active{ transform: translateY(1px); }
+  .card input{
+    position: absolute; opacity: 0; pointer-events: none;
+  }
+  .card.selected{
+    border-color: var(--ink);
+    background: oklch(0.22 0.02 60 / 0.03);
+  }
+  .card-hd{
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 10px;
+  }
+  .card-icon{
+    width: 44px; height: 44px; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 26px; line-height: 1;
+    background: oklch(0.968 0.016 92); border: 1px solid var(--ink-line-2);
+    flex-shrink: 0;
+  }
+  .card h3{
+    font-size: 19px; line-height: 1.15; letter-spacing: -0.01em;
+    font-weight: 800; margin: 0;
+  }
+  .card .card-tag{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-cap); margin-top: 2px;
+  }
+  .card p{
+    font-size: 14.5px; line-height: 1.5; color: var(--ink-dim);
+    margin: 0 0 12px;
+  }
+  .card .no-list{
+    display: flex; flex-wrap: wrap; gap: 6px;
+    list-style: none; padding: 0; margin: 0;
+  }
+  .card .no-list li{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-mid);
+    padding: 5px 9px; border: 1px solid var(--ink-line-2); border-radius: 6px;
+    background: var(--paper);
+  }
+  .card .no-list li::before{
+    content: "no "; color: var(--accent); font-weight: 700;
+  }
+  .card .check{
+    position: absolute; top: 18px; right: 18px;
+    width: 22px; height: 22px; border-radius: 999px;
+    border: 1.5px solid var(--ink-line-3);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--paper-2);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .card.selected .check{
+    background: var(--ink); border-color: var(--ink);
+  }
+  .card .check::after{
+    content: ""; width: 6px; height: 10px;
+    border-right: 2px solid var(--paper); border-bottom: 2px solid var(--paper);
+    transform: rotate(45deg) translate(-1px, -1px);
+    opacity: 0; transition: opacity 0.15s ease;
+  }
+  .card.selected .check::after{ opacity: 1; }
+
+  /* Email capture */
+  .signup{
+    max-width: 720px; margin: 0 auto;
+    padding: 40px 28px 32px;
+  }
+  .signup-eb{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-cap); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .signup-eb .num{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 999px;
+    background: var(--ink); color: var(--paper);
+    font-family: Archivo, sans-serif; font-weight: 700; font-size: 12px;
+    letter-spacing: 0;
+  }
+  .signup h2{
+    font-size: clamp(28px, 5vw, 36px); line-height: 1.1; letter-spacing: -0.02em;
+    font-weight: 800; margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .signup h2 .em{
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400; color: var(--accent);
+  }
+  .signup .sub{
+    font-size: 15px; color: var(--ink-mid); margin: 0 0 20px;
+  }
+  .signup-card{
+    background: var(--ink); color: var(--paper);
+    border-radius: 22px;
+    padding: 28px 24px;
+  }
+  .signup-card .promise{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: oklch(0.968 0.016 92 / 0.6);
+    margin: 0 0 12px;
+  }
+  .signup-card .promise .discount{
+    color: var(--paper); background: var(--accent);
+    padding: 3px 8px; border-radius: 5px; margin-right: 8px;
+  }
+  .signup-card p{
+    font-size: 17px; line-height: 1.45; margin: 0 0 22px; color: var(--paper);
+  }
+  .signup-form{ display: flex; flex-direction: column; gap: 10px; }
+  .signup-form input[type="email"]{
+    background: transparent; color: var(--paper);
+    border: 1px solid oklch(0.968 0.016 92 / 0.35); border-radius: 999px;
+    padding: 16px 22px; font-size: 15px;
+  }
+  .signup-form input[type="email"]::placeholder{
+    color: oklch(0.968 0.016 92 / 0.5);
+  }
+  .signup-form input[type="email"]:focus{
+    outline: none; border-color: var(--paper);
+  }
+  .signup-form button{
+    background: var(--paper); color: var(--ink);
+    border: none; border-radius: 999px;
+    padding: 16px 22px; font-size: 14px; font-weight: 800;
+    letter-spacing: 0.02em; cursor: pointer;
+    transition: filter 0.15s ease, opacity 0.15s ease;
+  }
+  .signup-form button:hover{ filter: brightness(0.95); }
+  .signup-form button:disabled{ opacity: 0.65; cursor: default; }
+  .signup-note{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+    color: oklch(0.968 0.016 92 / 0.7);
+    margin: 14px 0 0; min-height: 16px;
+    text-align: center;
+  }
+  .signup-note.err{ color: oklch(0.85 0.12 25); }
+  .signup-fine{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.06em;
+    color: var(--ink-cap);
+    margin: 14px 0 0; text-align: center;
+  }
+
+  /* Warning strip */
+  .warn{
+    max-width: 720px; margin: 0 auto;
+    padding: 16px 28px 40px;
+  }
+  .warn-inner{
+    border-top: 1px solid var(--ink-line);
+    padding-top: 24px;
+  }
+  .warn-tag{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700;
+  }
+  .warn p{
+    font-size: 16px; line-height: 1.55; color: var(--ink-dim);
+    margin: 8px 0 0;
+  }
+  .warn p .warn-lead{
+    color: var(--accent); font-weight: 700;
+  }
+
+  /* Micro footer */
+  footer{
+    max-width: 720px; margin: 0 auto;
+    padding: 20px 28px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: nowrap;
+    border-top: 1px solid var(--ink-line);
+  }
+  footer .copyright{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.04em; color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  footer .contact{
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.02em; white-space: nowrap;
+    padding-bottom: 2px; border-bottom: 1px solid var(--ink-line-3);
+  }
+
+  /* Thank you state */
+  .thanks{
+    max-width: 720px; margin: 0 auto;
+    padding: 72px 28px 40px;
+    text-align: center;
+  }
+  .thanks .big{
+    font-size: clamp(38px, 7vw, 56px); line-height: 1.05; letter-spacing: -0.03em;
+    font-weight: 800; margin: 18px 0 14px;
+  }
+  .thanks .big .em{
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400; color: var(--accent);
+  }
+  .thanks p{
+    font-size: 17px; line-height: 1.55; color: var(--ink-dim); margin: 0 auto 16px;
+    max-width: 480px;
+  }
+  .thanks .picked{
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--paper-2); border: 1px solid var(--ink-line-2);
+    border-radius: 999px; padding: 8px 16px; margin-top: 12px;
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 12px; letter-spacing: 0.06em;
+  }
+  .thanks .picked strong{ color: var(--accent); font-weight: 700; }
+  .thanks .go-back{
+    display: inline-block; margin-top: 24px;
+    font-family: 'Space Mono', ui-monospace, Menlo, monospace;
+    font-size: 12px; letter-spacing: 0.06em; color: var(--ink-soft);
+    text-decoration: underline; text-underline-offset: 4px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!--
+  Ads landing page — dedicated smoke-test destination for paid traffic.
+  Not linked from the main site; noindex/nofollow.
+
+  Flow: user lands from an ad, votes for one of three concepts,
+        enters email, submits. Data goes to Basin.
+
+  TODO before running ads:
+    1. Create a NEW form at https://usebasin.com/ (call it "SUC — Ads landing")
+    2. Copy the form endpoint URL and paste it into ADS_ENDPOINT below.
+       (Do NOT reuse the survey or taste-test endpoints — you'll want
+        the vote data separated for analysis.)
+    3. In the ad URL, append UTM params like:
+       ?utm_source=meta&utm_medium=cpc&utm_campaign=smoke-v1&utm_content=concept-A
+       These are captured automatically and stored with each submission.
+-->
+
+<div class="strip">
+  <a href="/" class="wordmark" aria-label="Straight Up Candy home">
+    <span class="up">STRAIGHT UP</span><span class="candy">candy</span>
+  </a>
+  <span class="kick">Utah · Launching 2026</span>
+</div>
+
+<main id="stage">
+
+  <section class="hero">
+    <div class="hero-pill"><span class="dot"></span>Coming soon to Utah</div>
+    <h1>Help us pick <span class="em">what to make first.</span></h1>
+    <p class="lede">We're a new Utah candy company for people who love candy but care about what's in their food. <strong>You choose which one we launch first</strong> — and get 20% off launch day.</p>
+  </section>
+
+  <section class="vote">
+    <div class="vote-eb"><span class="num">1</span>Pick one</div>
+    <h2>Which should we make first?</h2>
+    <p class="sub">Tap the one you'd actually buy. This is a real vote — the winner ships first.</p>
+
+    <div class="cards" id="cards">
+
+      <label class="card" data-concept="gummies">
+        <input type="radio" name="concept" value="gummies" />
+        <div class="check" aria-hidden="true"></div>
+        <div class="card-hd">
+          <span class="card-icon">🍬</span>
+          <div>
+            <h3>Real-fruit gummies</h3>
+            <div class="card-tag">Concept A · Chewy</div>
+          </div>
+        </div>
+        <p>Gummy bears made from actual fruit purée. Chewy, tart, the kind you can hand your kid without an inner monologue.</p>
+        <ul class="no-list">
+          <li>dyes</li>
+          <li>HFCS</li>
+          <li>artificial flavors</li>
+          <li>seed oils</li>
+        </ul>
+      </label>
+
+      <label class="card" data-concept="chocolate">
+        <input type="radio" name="concept" value="chocolate" />
+        <div class="check" aria-hidden="true"></div>
+        <div class="card-hd">
+          <span class="card-icon">🍫</span>
+          <div>
+            <h3>5-ingredient chocolate</h3>
+            <div class="card-tag">Concept B · Melty</div>
+          </div>
+        </div>
+        <p>Chocolate bites with five ingredients. All food. All pronounceable. The kind of thing you eat one of and feel fine about it.</p>
+        <ul class="no-list">
+          <li>seed oils</li>
+          <li>sugar alcohols</li>
+          <li>emulsifier gunk</li>
+          <li>fillers</li>
+        </ul>
+      </label>
+
+      <label class="card" data-concept="hardcandy">
+        <input type="radio" name="concept" value="hardcandy" />
+        <div class="check" aria-hidden="true"></div>
+        <div class="card-hd">
+          <span class="card-icon">🍭</span>
+          <div>
+            <h3>Dentist-approved hard candy</h3>
+            <div class="card-tag">Concept C · Lasting</div>
+          </div>
+        </div>
+        <p>Lollipops and hard candy sweetened with real fruit — low-glycemic, tooth-friendly, still actually candy. Not "wellness candy" that tastes like a supplement.</p>
+        <ul class="no-list">
+          <li>artificial sweeteners</li>
+          <li>dyes</li>
+          <li>HFCS</li>
+          <li>weird aftertaste</li>
+        </ul>
+      </label>
+
+    </div>
+  </section>
+
+  <section class="signup">
+    <div class="signup-eb"><span class="num">2</span>Get your discount</div>
+    <h2>Vote counts, <span class="em">discount hits inbox.</span></h2>
+    <p class="sub">Drop your email and we'll lock in your 20% off. We'll only email you when it's ready.</p>
+
+    <div class="signup-card">
+      <p class="promise"><span class="discount">20% OFF</span>Launch day, all yours.</p>
+      <p>You'll be the first to know when it's ready and the first to order.</p>
+      <form class="signup-form" id="ads-form" novalidate>
+        <input type="hidden" name="concept" id="hidden-concept" value="" />
+        <input type="hidden" name="utm_source" id="utm-source" value="" />
+        <input type="hidden" name="utm_medium" id="utm-medium" value="" />
+        <input type="hidden" name="utm_campaign" id="utm-campaign" value="" />
+        <input type="hidden" name="utm_content" id="utm-content" value="" />
+        <input type="hidden" name="utm_term" id="utm-term" value="" />
+        <input type="hidden" name="page" value="ads.html" />
+        <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" autocomplete="email" />
+        <button type="submit" id="ads-submit">Lock in 20% off →</button>
+      </form>
+      <p class="signup-note" id="ads-note" role="status" aria-live="polite"></p>
+    </div>
+    <p class="signup-fine">No spam. No sharing your email. Unsubscribe any time.</p>
+  </section>
+
+  <section class="warn">
+    <div class="warn-inner">
+      <span class="warn-tag">A brief warning</span>
+      <p><span class="warn-lead">Warning:</span> made the boring way — out of actual food, no science experiments. Side effects may include reading the label and being fine with it.</p>
+    </div>
+  </section>
+
+</main>
+
+<template id="thanks-tpl">
+  <section class="thanks">
+    <div class="hero-pill"><span class="dot"></span>You're in</div>
+    <h1 class="big">See you at <span class="em">launch.</span></h1>
+    <p>We've got your email and your vote. When we ship the first one, you'll be first in line — with 20% off.</p>
+    <div class="picked">You picked: <strong id="picked-name">—</strong></div>
+    <div>
+      <span class="go-back" id="reset-link">← Change your vote</span>
+    </div>
+  </section>
+</template>
+
+<footer>
+  <a href="/" class="wordmark" aria-label="Straight Up Candy">
+    <span class="up">STRAIGHT UP</span><span class="candy">candy</span>
+  </a>
+  <div class="copyright">© <span id="year"></span></div>
+  <a href="mailto:hello@straightupcandy.com" class="contact">hello@straightupcandy.com</a>
+</footer>
+
+<script>
+  // ------------------------------------------------------------------
+  // CONFIG — replace ADS_ENDPOINT before running ads.
+  // Create a NEW form at usebasin.com so vote data stays separate from
+  // the homepage survey and taste-test forms.
+  // ------------------------------------------------------------------
+  var ADS_ENDPOINT = 'https://usebasin.com/f/REPLACE_WITH_YOUR_FORM_ID';
+
+  // Human-friendly names for the thank-you screen.
+  var CONCEPT_NAMES = {
+    gummies:    'Real-fruit gummies',
+    chocolate:  '5-ingredient chocolate',
+    hardcandy:  'Dentist-approved hard candy'
+  };
+
+  // ------------------------------------------------------------------
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ------------------------------------------------------------------
+  // UTM capture — grab from URL, persist across a refresh in sessionStorage.
+  (function captureUtms(){
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+    var params;
+    try { params = new URLSearchParams(location.search); } catch(_) { params = null; }
+    var stored = {};
+    try {
+      stored = JSON.parse(sessionStorage.getItem('suc_ads_utm') || '{}') || {};
+    } catch(_) { stored = {}; }
+
+    keys.forEach(function(k){
+      var v = (params && params.get(k)) || stored[k] || '';
+      var el = document.getElementById(k.replace('_','-'));
+      if (el) el.value = v;
+      if (v) stored[k] = v;
+    });
+    try { sessionStorage.setItem('suc_ads_utm', JSON.stringify(stored)); } catch(_) {}
+  })();
+
+  // ------------------------------------------------------------------
+  // Vote-card selection
+  var cards = document.querySelectorAll('.card');
+  var hiddenConcept = document.getElementById('hidden-concept');
+
+  cards.forEach(function(card){
+    card.addEventListener('click', function(){
+      cards.forEach(function(c){ c.classList.remove('selected'); });
+      card.classList.add('selected');
+      var input = card.querySelector('input');
+      if (input) input.checked = true;
+      hiddenConcept.value = card.getAttribute('data-concept') || '';
+    });
+  });
+
+  // ------------------------------------------------------------------
+  // Submit — post to Basin, show thank-you state.
+  var form = document.getElementById('ads-form');
+  var note = document.getElementById('ads-note');
+  var submitBtn = document.getElementById('ads-submit');
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    note.textContent = '';
+    note.classList.remove('err');
+
+    var concept = hiddenConcept.value;
+    var email = (form.email.value || '').trim();
+
+    if (!concept){
+      note.textContent = 'Pick one of the three first.';
+      note.classList.add('err');
+      document.querySelector('.vote').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      note.textContent = 'That email doesn’t look right.';
+      note.classList.add('err');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Locking it in…';
+
+    var payload = new FormData(form);
+    // Add a timestamp for later analysis
+    payload.append('submitted_at', new Date().toISOString());
+    payload.append('user_agent', navigator.userAgent || '');
+    payload.append('referrer', document.referrer || '');
+
+    fetch(ADS_ENDPOINT, {
+      method: 'POST',
+      body: payload,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(res){
+      if (!res.ok) throw new Error('bad status ' + res.status);
+      showThanks(concept, email);
+    })
+    .catch(function(err){
+      console.error('ads submit failed', err);
+      note.textContent = 'Something broke on our end. Try again in a sec?';
+      note.classList.add('err');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Lock in 20% off →';
+    });
+  });
+
+  function showThanks(concept, email){
+    var stage = document.getElementById('stage');
+    var tpl = document.getElementById('thanks-tpl');
+    if (!stage || !tpl) return;
+
+    var frag = tpl.content.cloneNode(true);
+    var pickedEl = frag.getElementById('picked-name');
+    if (pickedEl) pickedEl.textContent = CONCEPT_NAMES[concept] || concept;
+
+    stage.innerHTML = '';
+    stage.appendChild(frag);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    var reset = document.getElementById('reset-link');
+    if (reset) reset.addEventListener('click', function(){ location.reload(); });
+
+    // Fire a lightweight conversion event so ad platforms can attribute it.
+    // If you install the Meta Pixel, replace the console line below with:
+    //   if (window.fbq) fbq('track', 'Lead', { content_name: concept });
+    // If you use GA4, add:
+    //   if (window.gtag) gtag('event', 'lead', { concept: concept });
+    try {
+      console.log('[ads] converted', { concept: concept, email_domain: email.split('@')[1] });
+      if (window.fbq) window.fbq('track', 'Lead', { content_name: concept });
+      if (window.gtag) window.gtag('event', 'lead', { concept: concept });
+    } catch(_) {}
+  }
+</script>
+
+</body>
+</html>
